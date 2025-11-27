@@ -422,6 +422,10 @@ func (h *Hierarchy) HandleExecuteTool(ctx context.Context, registry *ServerRegis
 		actualToolName = strings.Split(toolPath, ".")[len(strings.Split(toolPath, "."))-1]
 	}
 
+	// Auto-wrap arguments in 'params' if the schema requires it
+	// This handles Python MCP servers that use Pydantic models expecting a params wrapper
+	wrappedArguments := h.maybeWrapInParams(toolDef, arguments)
+
 	log.Printf("Executing tool: hierarchy_path=%s, server=%s, tool=%s", toolPath, serverName, actualToolName)
 
 	// Create a context with 15-second timeout for tool execution
@@ -431,7 +435,7 @@ func (h *Hierarchy) HandleExecuteTool(ctx context.Context, registry *ServerRegis
 	// Call the tool on the actual MCP server
 	callRequest := mcp.CallToolRequest{}
 	callRequest.Params.Name = actualToolName
-	callRequest.Params.Arguments = arguments
+	callRequest.Params.Arguments = wrappedArguments
 
 	result, err := client.GetClient().CallTool(toolCtx, callRequest)
 	if err != nil {
@@ -439,6 +443,66 @@ func (h *Hierarchy) HandleExecuteTool(ctx context.Context, registry *ServerRegis
 	}
 
 	return result, nil
+}
+
+// maybeWrapInParams checks if the tool's inputSchema requires arguments to be wrapped
+// in a 'params' object. This is common for Python MCP servers using Pydantic models.
+// If already wrapped or no wrapping needed, returns arguments unchanged.
+func (h *Hierarchy) maybeWrapInParams(toolDef *ToolDefinition, arguments map[string]interface{}) map[string]interface{} {
+	// If arguments are already wrapped in params, return as-is
+	if _, hasParams := arguments["params"]; hasParams {
+		return arguments
+	}
+
+	// Check if the schema requires params wrapper
+	if toolDef.InputSchema == nil {
+		return arguments
+	}
+
+	// Check if 'params' is in the required fields
+	required, ok := toolDef.InputSchema["required"]
+	if !ok {
+		return arguments
+	}
+
+	requiredList, ok := required.([]interface{})
+	if !ok {
+		return arguments
+	}
+
+	// Check if 'params' is required and is the only/primary required field
+	paramsRequired := false
+	for _, r := range requiredList {
+		if str, ok := r.(string); ok && str == "params" {
+			paramsRequired = true
+			break
+		}
+	}
+
+	if !paramsRequired {
+		return arguments
+	}
+
+	// Verify 'params' is defined in properties
+	props, ok := toolDef.InputSchema["properties"]
+	if !ok {
+		return arguments
+	}
+
+	propsMap, ok := props.(map[string]interface{})
+	if !ok {
+		return arguments
+	}
+
+	if _, hasParamsProp := propsMap["params"]; !hasParamsProp {
+		return arguments
+	}
+
+	// Schema requires params wrapper - wrap the arguments
+	log.Printf("Auto-wrapping arguments in 'params' for tool schema compatibility")
+	return map[string]interface{}{
+		"params": arguments,
+	}
 }
 
 // ServerRegistry manages MCP client connections
