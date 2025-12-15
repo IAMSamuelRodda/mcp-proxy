@@ -1,0 +1,14 @@
+{
+  "tools": {
+    "browser_install": {
+      "description": "Install browser binary. Call this first if you get 'browser not installed' errors. Only needed once per environment.",
+      "maps_to": "browser_install",
+      "server": "playwright",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      }
+    }
+  }
+}

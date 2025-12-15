@@ -1,0 +1,24 @@
+{
+  "tools": {
+    "stalwart_generate_dkim": {
+      "description": "Generate new DKIM signing key for domain. Returns DNS TXT record.\n\nUse sparingly - regenerating invalidates existing signatures.",
+      "maps_to": "stalwart_generate_dkim",
+      "server": "stalwart",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "type": "object",
+            "properties": {
+              "domain": { "type": "string", "description": "Domain name" },
+              "response_format": { "type": "string", "enum": ["markdown", "json"], "default": "markdown" }
+            },
+            "required": ["domain"]
+          }
+        },
+        "required": ["params"],
+        "additionalProperties": false
+      }
+    }
+  }
+}

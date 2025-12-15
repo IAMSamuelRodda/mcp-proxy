@@ -1,0 +1,20 @@
+{
+  "tools": {
+    "todoist_create_label": {
+      "description": "\n    Create a new label.\n\n    Labels help organize tasks across projects. Apply labels to tasks for easy filtering.\n\n    Args:\n        params: CreateLabelInput containing:\n            - name: Label name\n            - color: Optional color name\n            - is_favorite: Whether to mark as favorite\n\n    Returns:\n        Created label details including the new label ID.\n    ",
+      "maps_to": "todoist_create_label",
+      "server": "todoist",
+      "inputSchema": {
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/CreateLabelInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "type": "object"
+      }
+    }
+  }
+}

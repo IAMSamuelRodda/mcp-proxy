@@ -1,0 +1,55 @@
+{
+  "tools": {
+    "mailjet_send_email": {
+      "description": "Send email (text/HTML, tracking, custom IDs).\n\nThis tool sends a single email through Mailjet's Send API v3.1.\nAt least one of text_body or html_body must be provided.",
+      "maps_to": "mailjet_send_email",
+      "server": "mailjet",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "to_email": {
+            "type": "string",
+            "description": "Recipient email address (e.g., 'user@example.com')",
+            "pattern": "^[\\w\\.-]+@[\\w\\.-]+\\.\\w+$"
+          },
+          "to_name": {
+            "type": "string",
+            "description": "Recipient display name"
+          },
+          "subject": {
+            "type": "string",
+            "description": "Email subject line"
+          },
+          "text_body": {
+            "type": "string",
+            "description": "Plain text email body"
+          },
+          "html_body": {
+            "type": "string",
+            "description": "HTML email body"
+          },
+          "from_email": {
+            "type": "string",
+            "description": "Sender email address (must be verified in Mailjet account)",
+            "pattern": "^[\\w\\.-]+@[\\w\\.-]+\\.\\w+$"
+          },
+          "from_name": {
+            "type": "string",
+            "description": "Sender display name"
+          },
+          "reply_to": {
+            "type": "string",
+            "description": "Reply-to email address",
+            "pattern": "^[\\w\\.-]+@[\\w\\.-]+\\.\\w+$"
+          },
+          "custom_id": {
+            "type": "string",
+            "description": "Custom ID for tracking this message"
+          }
+        },
+        "required": ["to_email", "subject"],
+        "additionalProperties": false
+      }
+    }
+  }
+}

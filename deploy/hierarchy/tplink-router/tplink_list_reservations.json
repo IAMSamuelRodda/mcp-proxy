@@ -1,0 +1,21 @@
+{
+  "tools": {
+    "tplink_list_reservations": {
+      "description": "List DHCP reservations (static IPs) configured on router. Shows MAC-to-IP bindings for documenting and verifying static assignments.",
+      "maps_to": "tplink_list_reservations",
+      "server": "tplink-router",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "response_format": {
+            "type": "string",
+            "enum": ["markdown", "json"],
+            "default": "markdown",
+            "description": "Output format: 'markdown' for readable or 'json' for data"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

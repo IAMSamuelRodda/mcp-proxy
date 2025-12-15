@@ -1,0 +1,20 @@
+{
+  "tools": {
+    "todoist_list_projects": {
+      "description": "\n    List all projects in your Todoist account.\n\n    Returns all projects including personal projects, shared projects, and sub-projects.\n    Use this to get project IDs for creating tasks in specific projects.\n\n    Args:\n        params: ListProjectsInput containing:\n            - response_format: 'markdown' or 'json'\n\n    Returns:\n        List of projects with their IDs, names, and metadata.\n    ",
+      "maps_to": "todoist_list_projects",
+      "server": "todoist",
+      "inputSchema": {
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/ListProjectsInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "type": "object"
+      }
+    }
+  }
+}

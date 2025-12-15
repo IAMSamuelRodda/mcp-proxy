@@ -1,0 +1,21 @@
+{
+  "tools": {
+    "mailjet_list_senders": {
+      "description": "List verified sender email addresses (status, created).\n\nRetrieve all verified senders in your account that can be used\nas the 'From' address when sending emails.",
+      "maps_to": "mailjet_list_senders",
+      "server": "mailjet",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "response_format": {
+            "type": "string",
+            "enum": ["markdown", "json"],
+            "description": "Output format: 'markdown' or 'json'"
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      }
+    }
+  }
+}

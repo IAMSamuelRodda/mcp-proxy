@@ -1,0 +1,14 @@
+{
+  "tools": {
+    "browser_navigate_back": {
+      "description": "Navigate back in browser history. Equivalent to clicking browser back button.",
+      "maps_to": "browser_navigate_back",
+      "server": "playwright",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "tools": {
+    "todoist_create_task": {
+      "description": "\n    Create a new task in Todoist.\n\n    ⚠️ TEMPORAL CHECK: Verify year in due_date matches current year from\n    system date. LLMs often default to training-data years (2023/2024).\n\n    Supports natural language due dates like 'tomorrow', 'next Monday', 'every week'.\n    Priority 4 is highest (red), priority 1 is lowest.\n\n    Args:\n        params: CreateTaskInput containing:\n            - content: Task title/content\n            - description: Optional detailed description\n            - project_id: Project to add to (defaults to Inbox)\n            - due_string: Natural language due date\n            - due_date: Due date in YYYY-MM-DD format\n            - priority: 1-4 (4 is highest)\n            - labels: List of label names\n            - parent_id: Parent task ID for subtasks\n\n    Returns:\n        Created task details including the new task ID.\n    ",
+      "maps_to": "todoist_create_task",
+      "server": "todoist",
+      "inputSchema": {
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/CreateTaskInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "type": "object"
+      }
+    }
+  }
+}

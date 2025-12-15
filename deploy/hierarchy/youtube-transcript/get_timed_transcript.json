@@ -1,0 +1,8 @@
+{
+  "name": "get_timed_transcript",
+  "description": "Get transcript with timestamps in [MM:SS] format. Useful for referencing specific parts of the video.",
+  "parameters": {
+    "video_url": "YouTube video URL or video ID (required)",
+    "language": "Language code e.g. 'en', 'es' (optional, auto-detects)"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "tools": {
+    "nextcloud_create_event": {
+      "description": "\n    Create a new event in a Nextcloud calendar.\n\n    ⚠️ TEMPORAL CHECK: Verify year in start_datetime matches current year\n    from system date. LLMs often default to training-data years (2023/2024).\n\n    Supports regular events and all-day events. Times are interpreted\n    in the specified timezone (defaults to Australia/Sydney).\n\n    Args:\n        params: CreateEventInput containing:\n            - calendar_name: Calendar to create event in\n            - summary: Event title\n            - start_datetime: Start time (YYYY-MM-DDTHH:MM)\n            - end_datetime: End time (optional, defaults to +1 hour)\n            - description: Event description (optional)\n            - location: Event location (optional)\n            - all_day: Create as all-day event\n            - timezone: Timezone for times\n\n    Returns:\n        Confirmation with the new event's UID.\n    ",
+      "maps_to": "nextcloud_create_event",
+      "server": "nextcloud-calendar",
+      "inputSchema": {
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/CreateEventInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "type": "object"
+      }
+    }
+  }
+}

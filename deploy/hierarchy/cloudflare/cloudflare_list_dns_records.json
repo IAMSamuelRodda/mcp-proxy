@@ -1,0 +1,48 @@
+{
+  "tools": {
+    "cloudflare_list_dns_records": {
+      "description": "List DNS records for a zone. Filter by type or name.\n\nReturns record types, names, content, TTL, and IDs needed for updates/deletes.",
+      "maps_to": "cloudflare_list_dns_records",
+      "server": "cloudflare",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "zone": {
+            "type": "string",
+            "description": "Zone name (e.g., 'example.com') or zone ID"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["A", "AAAA", "CNAME", "MX", "TXT", "NS", "SRV", "CAA", "PTR"],
+            "description": "Filter by record type"
+          },
+          "name": {
+            "type": "string",
+            "description": "Filter by record name (e.g., 'www' or 'mail.example.com')"
+          },
+          "page": {
+            "type": "integer",
+            "description": "Page number",
+            "default": 1,
+            "minimum": 1
+          },
+          "per_page": {
+            "type": "integer",
+            "description": "Results per page",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 100
+          },
+          "response_format": {
+            "type": "string",
+            "enum": ["markdown", "json"],
+            "description": "Output format",
+            "default": "markdown"
+          }
+        },
+        "required": ["zone"],
+        "additionalProperties": false
+      }
+    }
+  }
+}

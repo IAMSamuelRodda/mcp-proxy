@@ -1,0 +1,29 @@
+{
+  "tools": {
+    "mailjet_list_contacts": {
+      "description": "List contacts with pagination and metadata.\n\nRetrieve all contacts in your Mailjet account with optional pagination.\nShows email addresses, creation timestamps, and exclusion status.",
+      "maps_to": "mailjet_list_contacts",
+      "server": "mailjet",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "description": "Maximum contacts to return (default 50)"
+          },
+          "offset": {
+            "type": "integer",
+            "description": "Pagination offset"
+          },
+          "response_format": {
+            "type": "string",
+            "enum": ["markdown", "json"],
+            "description": "Output format: 'markdown' or 'json'"
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      }
+    }
+  }
+}

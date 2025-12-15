@@ -1,0 +1,20 @@
+{
+  "tools": {
+    "todoist_delete_task": {
+      "description": "\n    Permanently delete a task.\n\n    ⚠️ This action cannot be undone. The task will be permanently removed.\n\n    Args:\n        params: DeleteTaskInput containing:\n            - task_id: The task ID to delete\n\n    Returns:\n        Confirmation that the task was deleted.\n    ",
+      "maps_to": "todoist_delete_task",
+      "server": "todoist",
+      "inputSchema": {
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/DeleteTaskInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "type": "object"
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "tools": {
+    "nextcloud_get_event": {
+      "description": "\n    Get full details of a specific event by UID.\n\n    Args:\n        params: GetEventInput containing:\n            - event_uid: The unique event identifier\n            - calendar_name: Calendar to search in (optional)\n            - response_format: 'markdown' or 'json'\n\n    Returns:\n        Full event details including description, location, and times.\n    ",
+      "maps_to": "nextcloud_get_event",
+      "server": "nextcloud-calendar",
+      "inputSchema": {
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/GetEventInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "type": "object"
+      }
+    }
+  }
+}

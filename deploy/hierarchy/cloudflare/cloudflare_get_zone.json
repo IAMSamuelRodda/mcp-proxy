@@ -1,0 +1,33 @@
+{
+  "tools": {
+    "cloudflare_get_zone": {
+      "description": "Get details for a specific Cloudflare zone by name or ID.\n\nReturns zone ID, status, nameservers, and plan information.",
+      "maps_to": "cloudflare_get_zone",
+      "server": "cloudflare",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "type": "object",
+            "description": "Input parameters",
+            "properties": {
+              "zone": {
+                "type": "string",
+                "description": "Zone name (e.g., 'example.com') or zone ID"
+              },
+              "response_format": {
+                "type": "string",
+                "enum": ["markdown", "json"],
+                "description": "Output format",
+                "default": "markdown"
+              }
+            },
+            "required": ["zone"]
+          }
+        },
+        "required": ["params"],
+        "additionalProperties": false
+      }
+    }
+  }
+}

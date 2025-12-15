@@ -1,0 +1,20 @@
+{
+  "tools": {
+    "joplin_tag_note": {
+      "description": "\n    Add tag to note. Creates tag automatically if it doesn't exist.\n\n    Idempotent: adding existing tag has no effect. Case-insensitive matching.\n\n    Args:\n        params: TagNoteInput containing:\n            - note_id: The note ID to tag (required)\n            - tag: Tag name to add (auto-created if needed)\n\n    Returns:\n        Confirmation that the tag was added.\n    ",
+      "maps_to": "joplin_tag_note",
+      "server": "joplin",
+      "inputSchema": {
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/TagNoteInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "type": "object"
+      }
+    }
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "tools": {
+    "cloudflare_update_dns_record": {
+      "description": "Update an existing DNS record by ID.\n\nUse cloudflare_list_dns_records first to find the record ID. Only provide fields you want to change.",
+      "maps_to": "cloudflare_update_dns_record",
+      "server": "cloudflare",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "zone": {
+            "type": "string",
+            "description": "Zone name or zone ID"
+          },
+          "record_id": {
+            "type": "string",
+            "description": "DNS record ID to update"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["A", "AAAA", "CNAME", "MX", "TXT", "NS", "SRV", "CAA", "PTR"],
+            "description": "New record type"
+          },
+          "name": {
+            "type": "string",
+            "description": "New record name"
+          },
+          "content": {
+            "type": "string",
+            "description": "New record content"
+          },
+          "ttl": {
+            "type": "integer",
+            "description": "New TTL in seconds",
+            "minimum": 1,
+            "maximum": 86400
+          },
+          "priority": {
+            "type": "integer",
+            "description": "New priority for MX records",
+            "minimum": 0,
+            "maximum": 65535
+          },
+          "proxied": {
+            "type": "boolean",
+            "description": "Enable/disable Cloudflare proxy"
+          },
+          "comment": {
+            "type": "string",
+            "description": "New comment"
+          }
+        },
+        "required": ["zone", "record_id"],
+        "additionalProperties": false
+      }
+    }
+  }
+}

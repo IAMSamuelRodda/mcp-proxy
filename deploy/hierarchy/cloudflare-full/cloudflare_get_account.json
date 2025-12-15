@@ -1,0 +1,16 @@
+{
+  "tools": {
+    "cloudflare_get_account": {
+      "description": "Get account details including name, settings, and capabilities.\n\nReturns comprehensive account information including account ID, name, type, and configured settings.",
+      "maps_to": "cloudflare_get_account",
+      "server": "cloudflare-full",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "response_format": {"type": "string", "enum": ["markdown", "json"], "default": "markdown", "description": "Output format"}
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

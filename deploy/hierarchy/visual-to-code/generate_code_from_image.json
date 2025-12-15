@@ -1,0 +1,27 @@
+{
+  "tools": {
+    "generate_code_from_image": {
+      "description": "Generate HTML/Tailwind code from design image via delegation (NO API COSTS).\n\nDelegates to parent Claude Code agent which spawns subagent to preserve context. Uses your Max subscription vision capability for free. Achieves 85-90% visual accuracy using exact screenshot-to-code parameters.\n\nProvides complete HTML/Tailwind implementation with CDN libraries, placeholder images, and icons.",
+      "maps_to": "generate_code_from_image",
+      "server": "visual-to-code",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "image_path": {
+            "type": "string",
+            "description": "Absolute or relative path to design image file (PNG, JPG, JPEG, WEBP). Examples: 'design.png', '/home/user/designs/mockup.jpg', './wireframe.png'"
+          },
+          "temperature": {
+            "type": "number",
+            "description": "Temperature for generation (0.7=conservative, 1.0=balanced/default, higher=creative). Controls code variation.",
+            "default": 1.0,
+            "minimum": 0.0,
+            "maximum": 2.0
+          }
+        },
+        "required": ["image_path"],
+        "additionalProperties": false
+      }
+    }
+  }
+}

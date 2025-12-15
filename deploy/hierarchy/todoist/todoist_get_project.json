@@ -1,0 +1,20 @@
+{
+  "tools": {
+    "todoist_get_project": {
+      "description": "\n    Get details of a specific project.\n\n    Args:\n        params: GetProjectInput containing:\n            - project_id: The project ID\n            - response_format: 'markdown' or 'json'\n\n    Returns:\n        Project details including name, color, and metadata.\n    ",
+      "maps_to": "todoist_get_project",
+      "server": "todoist",
+      "inputSchema": {
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/GetProjectInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "type": "object"
+      }
+    }
+  }
+}

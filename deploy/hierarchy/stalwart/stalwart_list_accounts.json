@@ -1,0 +1,25 @@
+{
+  "tools": {
+    "stalwart_list_accounts": {
+      "description": "List accounts (users, groups, domains). Filter by type or name text.\n\nUse to find account names for other operations. Returns usernames, emails, and account types.",
+      "maps_to": "stalwart_list_accounts",
+      "server": "stalwart",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "type": "object",
+            "properties": {
+              "account_type": { "type": "string", "enum": ["individual", "group", "domain", "tenant", "apiKey", "oauthClient", "list", "resource", "location", "other"], "description": "Type of accounts to list" },
+              "filter_text": { "type": "string", "description": "Filter by name/email containing text" },
+              "limit": { "type": "integer", "default": 50, "description": "Maximum accounts to return" },
+              "response_format": { "type": "string", "enum": ["markdown", "json"], "default": "markdown" }
+            }
+          }
+        },
+        "required": ["params"],
+        "additionalProperties": false
+      }
+    }
+  }
+}

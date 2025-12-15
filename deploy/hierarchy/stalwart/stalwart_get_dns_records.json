@@ -1,0 +1,24 @@
+{
+  "tools": {
+    "stalwart_get_dns_records": {
+      "description": "Get required DNS records for domain. Shows MX, SPF, DKIM, DMARC.\n\nUse to verify or configure DNS for email delivery.",
+      "maps_to": "stalwart_get_dns_records",
+      "server": "stalwart",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "type": "object",
+            "properties": {
+              "domain": { "type": "string", "description": "Domain name (e.g., 'arcforge.au')" },
+              "response_format": { "type": "string", "enum": ["markdown", "json"], "default": "markdown" }
+            },
+            "required": ["domain"]
+          }
+        },
+        "required": ["params"],
+        "additionalProperties": false
+      }
+    }
+  }
+}

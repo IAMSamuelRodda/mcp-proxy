@@ -1,0 +1,20 @@
+{
+  "tools": {
+    "nextcloud_update_event": {
+      "description": "\n    Update an existing event in Nextcloud.\n\n    Only provided fields will be updated.\n\n    Args:\n        params: UpdateEventInput containing:\n            - event_uid: The event UID to update\n            - calendar_name: Calendar where event is located (optional)\n            - summary: New event title (optional)\n            - start_datetime: New start time (optional)\n            - end_datetime: New end time (optional)\n            - description: New description (optional)\n            - location: New location (optional)\n            - timezone: Timezone for datetime values\n\n    Returns:\n        Confirmation that the event was updated.\n    ",
+      "maps_to": "nextcloud_update_event",
+      "server": "nextcloud-calendar",
+      "inputSchema": {
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/UpdateEventInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "type": "object"
+      }
+    }
+  }
+}

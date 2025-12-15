@@ -1,0 +1,20 @@
+{
+  "tools": {
+    "joplin_delete_note": {
+      "description": "\n    ⚠️ Delete note permanently. Cannot be undone.\n\n    Args:\n        params: DeleteNoteInput containing:\n            - note_id: The note ID to delete (required)\n\n    Returns:\n        Confirmation that the note was deleted.\n    ",
+      "maps_to": "joplin_delete_note",
+      "server": "joplin",
+      "inputSchema": {
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/DeleteNoteInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "type": "object"
+      }
+    }
+  }
+}

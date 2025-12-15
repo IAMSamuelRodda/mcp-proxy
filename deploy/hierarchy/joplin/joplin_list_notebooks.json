@@ -1,0 +1,20 @@
+{
+  "tools": {
+    "joplin_list_notebooks": {
+      "description": "\n    List notebooks with IDs and hierarchy. Use to find notebook_id for filtering.\n\n    Returns tree structure showing parent/child relationships.\n    Always list notebooks first before creating new ones to avoid duplicates.\n\n    Args:\n        params: ListNotebooksInput containing:\n            - response_format: 'markdown' or 'json'\n\n    Returns:\n        List of notebooks with their IDs and structure.\n    ",
+      "maps_to": "joplin_list_notebooks",
+      "server": "joplin",
+      "inputSchema": {
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/ListNotebooksInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "type": "object"
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "tools": {
+    "browser_navigate": {
+      "description": "Navigate browser to URL. This is typically the first action to load a page.",
+      "maps_to": "browser_navigate",
+      "server": "playwright",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "The URL to navigate to"
+          }
+        },
+        "required": ["url"],
+        "additionalProperties": false
+      }
+    }
+  }
+}

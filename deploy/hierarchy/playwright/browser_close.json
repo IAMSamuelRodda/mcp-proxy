@@ -1,0 +1,14 @@
+{
+  "tools": {
+    "browser_close": {
+      "description": "Close current browser page/tab. Use when done with automation or to clean up.",
+      "maps_to": "browser_close",
+      "server": "playwright",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      }
+    }
+  }
+}

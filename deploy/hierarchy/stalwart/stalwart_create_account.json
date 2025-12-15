@@ -1,0 +1,27 @@
+{
+  "tools": {
+    "stalwart_create_account": {
+      "description": "Create email account with password. Set name, email, quota, description.\n\nCreates a new mailbox. Always list accounts first to avoid duplicates.",
+      "maps_to": "stalwart_create_account",
+      "server": "stalwart",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string", "description": "Username (e.g., 'john')" },
+              "email": { "type": "string", "description": "Primary email (e.g., 'john@arcforge.au')" },
+              "password": { "type": "string", "description": "Account password (min 8 chars)" },
+              "description": { "type": "string", "description": "Display name" },
+              "quota": { "type": "integer", "description": "Quota in bytes" }
+            },
+            "required": ["name", "email", "password"]
+          }
+        },
+        "required": ["params"],
+        "additionalProperties": false
+      }
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "tools": {
+    "browser_drag": {
+      "description": "Drag from source element to target element. Requires start and end element refs from browser_snapshot.",
+      "maps_to": "browser_drag",
+      "server": "playwright",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "startElement": {
+            "type": "string",
+            "description": "Human-readable source element description"
+          },
+          "startRef": {
+            "type": "string",
+            "description": "Exact source element reference from the page snapshot"
+          },
+          "endElement": {
+            "type": "string",
+            "description": "Human-readable target element description"
+          },
+          "endRef": {
+            "type": "string",
+            "description": "Exact target element reference from the page snapshot"
+          }
+        },
+        "required": ["startElement", "startRef", "endElement", "endRef"],
+        "additionalProperties": false
+      }
+    }
+  }
+}

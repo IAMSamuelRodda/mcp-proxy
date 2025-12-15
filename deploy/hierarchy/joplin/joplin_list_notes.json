@@ -1,0 +1,20 @@
+{
+  "tools": {
+    "joplin_list_notes": {
+      "description": "\n    List notes with IDs, titles, dates. Filter by notebook_id, sort by date/title.\n\n    Returns note metadata (not content). Use get_note for full content.\n    Supports to-do status indicators in output.\n\n    Args:\n        params: ListNotesInput containing:\n            - notebook_id: Filter by notebook (optional)\n            - limit: Maximum notes to return (default 50)\n            - order_by: Sort field (updated_time, created_time, title)\n            - order_desc: Sort descending (default true)\n            - response_format: 'markdown' or 'json'\n\n    Returns:\n        List of notes with titles, dates, and IDs.\n    ",
+      "maps_to": "joplin_list_notes",
+      "server": "joplin",
+      "inputSchema": {
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/ListNotesInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "type": "object"
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "tools": {
+    "tplink_list_devices": {
+      "description": "List connected devices with IPs, MACs, and connection type (wired/wireless). Shows all devices currently on the network for inventory and conflict detection.",
+      "maps_to": "tplink_list_devices",
+      "server": "tplink-router",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "response_format": {
+            "type": "string",
+            "enum": ["markdown", "json"],
+            "default": "markdown",
+            "description": "Output format: 'markdown' for readable or 'json' for data"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

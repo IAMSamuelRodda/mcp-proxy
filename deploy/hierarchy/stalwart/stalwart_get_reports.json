@@ -1,0 +1,24 @@
+{
+  "tools": {
+    "stalwart_get_reports": {
+      "description": "Get DMARC, TLS, or ARF reports. Shows authentication failures.\n\nUse to review email authentication issues.",
+      "maps_to": "stalwart_get_reports",
+      "server": "stalwart",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "type": "object",
+            "properties": {
+              "report_type": { "type": "string", "enum": ["dmarc", "tls", "arf"], "default": "dmarc" },
+              "limit": { "type": "integer", "default": 20, "description": "Maximum reports" },
+              "response_format": { "type": "string", "enum": ["markdown", "json"], "default": "markdown" }
+            }
+          }
+        },
+        "required": ["params"],
+        "additionalProperties": false
+      }
+    }
+  }
+}

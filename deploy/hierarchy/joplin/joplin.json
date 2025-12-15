@@ -1,0 +1,3 @@
+{
+  "overview": "joplin: 11 tools; joplin_create_note -\u003e \n    Create note with Markdown body, optional tags, to-do support.\n\n    Specify notebook_id to ta..., joplin_create_notebook -\u003e Create notebook or return existing., joplin_delete_note -\u003e ⚠️ Delete note permanently., joplin_ensure_running -\u003e Ensure API ready., joplin_get_note -\u003e Get note by ID with full Markdown content., joplin_list_notebooks -\u003e List notebooks with IDs and hierarchy., joplin_list_notes -\u003e List notes with IDs, titles, dates., joplin_list_tags -\u003e List all tags with IDs., joplin_search_notes -\u003e Search notes., joplin_tag_note -\u003e Add tag to note., joplin_update_note -\u003e Update note title, body, or move to different notebook."
+}

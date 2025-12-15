@@ -1,0 +1,20 @@
+{
+  "tools": {
+    "joplin_create_notebook": {
+      "description": "\n    Create notebook or return existing. Checks for duplicates by title first.\n\n    ⚠️ IMPORTANT: Always searches for existing notebook with same title before\n    creating. Returns existing notebook ID if found to prevent duplicates.\n\n    Args:\n        params: CreateNotebookInput containing:\n            - title: Notebook name\n            - parent_id: Optional parent notebook for sub-notebook\n\n    Returns:\n        Notebook details with ID (existing or newly created).\n    ",
+      "maps_to": "joplin_create_notebook",
+      "server": "joplin",
+      "inputSchema": {
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/CreateNotebookInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "type": "object"
+      }
+    }
+  }
+}

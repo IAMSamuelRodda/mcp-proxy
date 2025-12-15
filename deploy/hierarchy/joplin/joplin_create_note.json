@@ -1,0 +1,20 @@
+{
+  "tools": {
+    "joplin_create_note": {
+      "description": "\n    Create note with Markdown body, optional tags, to-do support.\n\n    Specify notebook_id to target specific notebook (list notebooks first).\n    Tags are created automatically if they don't exist.\n\n    Args:\n        params: CreateNoteInput containing:\n            - title: Note title (required)\n            - body: Markdown content (default empty)\n            - notebook_id: Target notebook ID (uses default if not set)\n            - tags: List of tag names (auto-created if needed)\n            - is_todo: Create as to-do item (default false)\n\n    Returns:\n        Created note details with ID.\n    ",
+      "maps_to": "joplin_create_note",
+      "server": "joplin",
+      "inputSchema": {
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/CreateNoteInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "type": "object"
+      }
+    }
+  }
+}

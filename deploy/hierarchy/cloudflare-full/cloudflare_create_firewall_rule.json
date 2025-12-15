@@ -1,0 +1,22 @@
+{
+  "tools": {
+    "cloudflare_create_firewall_rule": {
+      "description": "Create custom firewall rule with action and filter expression.\n\nCreates firewall rule to block, challenge, or allow traffic based on conditions like IP addresses, countries, user agents.\n\nExamples:\n- Block IP: expression='ip.src eq 1.2.3.4', action='block'\n- Challenge country: expression='ip.geoip.country eq \"CN\"', action='challenge'",
+      "maps_to": "cloudflare_create_firewall_rule",
+      "server": "cloudflare-full",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "zone": {"type": "string", "description": "Zone name or zone ID", "minLength": 1},
+          "action": {"type": "string", "enum": ["block", "challenge", "js_challenge", "managed_challenge", "allow", "log", "bypass"], "description": "Action to take"},
+          "expression": {"type": "string", "description": "Filter expression (e.g., 'ip.src eq 1.2.3.4')", "minLength": 1},
+          "description": {"type": "string", "description": "Rule description", "maxLength": 500},
+          "paused": {"type": "boolean", "default": false, "description": "Whether rule is paused"},
+          "priority": {"type": "integer", "description": "Rule priority", "minimum": 0}
+        },
+        "required": ["zone", "action", "expression"],
+        "additionalProperties": false
+      }
+    }
+  }
+}

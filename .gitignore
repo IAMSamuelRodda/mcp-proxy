@@ -19,8 +19,7 @@ Thumbs.db
 # Upstream reference (not needed in distribution)
 upstream-lazy-mcp/
 
-# Deploy output (generated)
-deploy/hierarchy/
+# Deploy output - hierarchy is tracked (contains tool definitions for all servers)
 
 # Test output
 *.test
@@ -29,3 +28,14 @@ coverage.html
 
 # Logs
 *.log
+
+# Config files with credentials (NEVER commit real tokens)
+config/config.json
+config/*.local.json
+**/config.local.json
+.env
+.env.*
+!.env.example
+
+# Deployed configs (may contain credentials)
+~/.claude/lazy-mcp/config.json

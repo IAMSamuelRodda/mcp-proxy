@@ -1,0 +1,7 @@
+{
+  "name": "resolve-library-id",
+  "description": "Find the correct Context7 library ID for a package name. Use before get-library-docs.",
+  "parameters": {
+    "library_name": "Name of the library/package to look up (required)"
+  }
+}

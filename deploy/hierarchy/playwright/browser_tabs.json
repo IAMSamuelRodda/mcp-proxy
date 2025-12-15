@@ -1,0 +1,25 @@
+{
+  "tools": {
+    "browser_tabs": {
+      "description": "Manage browser tabs. Actions: list, new, close, select. Use index param for close/select operations.",
+      "maps_to": "browser_tabs",
+      "server": "playwright",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": ["list", "new", "close", "select"],
+            "description": "Operation to perform"
+          },
+          "index": {
+            "type": "number",
+            "description": "Tab index, used for close/select"
+          }
+        },
+        "required": ["action"],
+        "additionalProperties": false
+      }
+    }
+  }
+}

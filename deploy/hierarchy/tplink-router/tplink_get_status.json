@@ -1,0 +1,21 @@
+{
+  "tools": {
+    "tplink_get_status": {
+      "description": "Get router status: WAN connection, WiFi networks, device counts, firmware. Quick health check and network overview.",
+      "maps_to": "tplink_get_status",
+      "server": "tplink-router",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "response_format": {
+            "type": "string",
+            "enum": ["markdown", "json"],
+            "default": "markdown",
+            "description": "Output format: 'markdown' for readable or 'json' for data"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

@@ -193,6 +193,20 @@ Fork of [voicetreelab/lazy-mcp](https://github.com/voicetreelab/lazy-mcp).
 
 Contributions welcome! This project addresses [anthropics/claude-code#3036](https://github.com/anthropics/claude-code/issues/3036).
 
+## Security Notes
+
+### Remote Config
+
+If using `--config https://...` to load config from a URL:
+- Ensure the config server uses valid HTTPS certificates
+- Config files fetched remotely contain the same sensitive data as local configs
+
+### Auth Tokens
+
+When using HTTP server mode with `authTokens`:
+- Generate cryptographically strong tokens: `openssl rand -base64 32`
+- Rotate tokens periodically
+
 ## License
 
 MIT License (same as upstream)

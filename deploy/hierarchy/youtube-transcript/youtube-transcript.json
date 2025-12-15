@@ -1,0 +1,3 @@
+{
+  "overview": "youtube-transcript: 3 tools; get_transcript -> Get plain text transcript of a YouTube video, get_timed_transcript -> Get transcript with timestamps in [MM:SS] format, get_video_info -> Get available transcript languages for a video"
+}

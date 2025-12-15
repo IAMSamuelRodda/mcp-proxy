@@ -1,0 +1,22 @@
+{
+  "tools": {
+    "stalwart_queue_status": {
+      "description": "Get mail queue processing status. Shows if queue is running or paused.",
+      "maps_to": "stalwart_queue_status",
+      "server": "stalwart",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "type": "object",
+            "properties": {
+              "response_format": { "type": "string", "enum": ["markdown", "json"], "default": "markdown" }
+            }
+          }
+        },
+        "required": ["params"],
+        "additionalProperties": false
+      }
+    }
+  }
+}

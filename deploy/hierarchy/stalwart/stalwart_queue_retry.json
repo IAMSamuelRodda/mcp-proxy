@@ -1,0 +1,23 @@
+{
+  "tools": {
+    "stalwart_queue_retry": {
+      "description": "Force immediate retry of queued message. Reschedules for immediate delivery.",
+      "maps_to": "stalwart_queue_retry",
+      "server": "stalwart",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "type": "object",
+            "properties": {
+              "message_id": { "type": "string", "description": "Queue message ID" }
+            },
+            "required": ["message_id"]
+          }
+        },
+        "required": ["params"],
+        "additionalProperties": false
+      }
+    }
+  }
+}

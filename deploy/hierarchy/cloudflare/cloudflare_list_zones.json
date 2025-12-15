@@ -1,0 +1,39 @@
+{
+  "tools": {
+    "cloudflare_list_zones": {
+      "description": "List all zones (domains) in your Cloudflare account.\n\nReturns zone names, IDs, status, and nameservers. Use zone IDs for other operations.",
+      "maps_to": "cloudflare_list_zones",
+      "server": "cloudflare",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Filter by zone name (e.g., 'example.com')"
+          },
+          "page": {
+            "type": "integer",
+            "description": "Page number",
+            "default": 1,
+            "minimum": 1
+          },
+          "per_page": {
+            "type": "integer",
+            "description": "Results per page",
+            "default": 50,
+            "minimum": 1,
+            "maximum": 100
+          },
+          "response_format": {
+            "type": "string",
+            "enum": ["markdown", "json"],
+            "description": "Output format",
+            "default": "markdown"
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      }
+    }
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "tools": {
+    "cloudflare_create_dns_record": {
+      "description": "Create a new DNS record in a zone.\n\nExamples:\n- A record: type=A, name='www', content='192.168.1.1'\n- MX record: type=MX, name='@', content='mail.example.com', priority=10\n- TXT record: type=TXT, name='@', content='v=spf1 mx -all'",
+      "maps_to": "cloudflare_create_dns_record",
+      "server": "cloudflare",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "zone": {
+            "type": "string",
+            "description": "Zone name (e.g., 'example.com') or zone ID"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["A", "AAAA", "CNAME", "MX", "TXT", "NS", "SRV", "CAA", "PTR"],
+            "description": "DNS record type"
+          },
+          "name": {
+            "type": "string",
+            "description": "Record name (e.g., '@' for root, 'www', 'mail')"
+          },
+          "content": {
+            "type": "string",
+            "description": "Record content (IP for A/AAAA, hostname for CNAME/MX, text for TXT)"
+          },
+          "ttl": {
+            "type": "integer",
+            "description": "TTL in seconds. Use 1 for 'automatic'",
+            "default": 1,
+            "minimum": 1,
+            "maximum": 86400
+          },
+          "priority": {
+            "type": "integer",
+            "description": "Priority for MX records (required for MX, lower = higher priority)",
+            "minimum": 0,
+            "maximum": 65535
+          },
+          "proxied": {
+            "type": "boolean",
+            "description": "Enable Cloudflare proxy (only for A/AAAA/CNAME)",
+            "default": false
+          },
+          "comment": {
+            "type": "string",
+            "description": "Comment for the DNS record"
+          }
+        },
+        "required": ["zone", "type", "name", "content"],
+        "additionalProperties": false
+      }
+    }
+  }
+}

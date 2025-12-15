@@ -1,0 +1,27 @@
+{
+  "tools": {
+    "browser_wait_for": {
+      "description": "Wait for condition. Options: time (seconds), text (appear), textGone (disappear). Use between actions for dynamic content.",
+      "maps_to": "browser_wait_for",
+      "server": "playwright",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "time": {
+            "type": "number",
+            "description": "The time to wait in seconds"
+          },
+          "text": {
+            "type": "string",
+            "description": "The text to wait for"
+          },
+          "textGone": {
+            "type": "string",
+            "description": "The text to wait for to disappear"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "tools": {
+    "mailjet_get_statistics": {
+      "description": "Get sending stats (delivered, open/click rates, bounces).\n\nRetrieve email statistics including delivery, open, click, bounce rates\nand engagement metrics for the specified period (up to 90 days).",
+      "maps_to": "mailjet_get_statistics",
+      "server": "mailjet",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "days": {
+            "type": "integer",
+            "description": "Number of days of statistics (1-90, default 7)"
+          },
+          "response_format": {
+            "type": "string",
+            "enum": ["markdown", "json"],
+            "description": "Output format: 'markdown' or 'json'"
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      }
+    }
+  }
+}

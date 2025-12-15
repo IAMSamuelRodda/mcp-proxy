@@ -1,0 +1,14 @@
+{
+  "tools": {
+    "stalwart_queue_start": {
+      "description": "Start/resume mail queue processing. Enables delivery of queued messages.\n\nIdempotent - safe to call if already running.",
+      "maps_to": "stalwart_queue_start",
+      "server": "stalwart",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      }
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "tools": {
+    "stalwart_get_settings": {
+      "description": "Get server configuration settings. Filter by key prefix.\n\nUse prefix like 'server.' or 'queue.' to narrow results.",
+      "maps_to": "stalwart_get_settings",
+      "server": "stalwart",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "type": "object",
+            "properties": {
+              "prefix": { "type": "string", "description": "Settings key prefix filter" },
+              "response_format": { "type": "string", "enum": ["markdown", "json"], "default": "markdown" }
+            }
+          }
+        },
+        "required": ["params"],
+        "additionalProperties": false
+      }
+    }
+  }
+}

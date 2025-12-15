@@ -1,0 +1,20 @@
+{
+  "tools": {
+    "todoist_list_labels": {
+      "description": "\n    List all personal labels in your Todoist account.\n\n    Labels can be applied to tasks for organization and filtering.\n\n    Args:\n        params: ListLabelsInput containing:\n            - response_format: 'markdown' or 'json'\n\n    Returns:\n        List of labels with their names and colors.\n    ",
+      "maps_to": "todoist_list_labels",
+      "server": "todoist",
+      "inputSchema": {
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/ListLabelsInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "type": "object"
+      }
+    }
+  }
+}

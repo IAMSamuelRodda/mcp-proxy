@@ -1,0 +1,8 @@
+{
+  "name": "get_transcript",
+  "description": "Get the plain text transcript of a YouTube video. Returns full transcript as continuous text without timestamps.",
+  "parameters": {
+    "video_url": "YouTube video URL or video ID (required)",
+    "language": "Language code e.g. 'en', 'es' (optional, auto-detects)"
+  }
+}

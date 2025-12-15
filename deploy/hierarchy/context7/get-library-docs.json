@@ -1,0 +1,9 @@
+{
+  "name": "get-library-docs",
+  "description": "Get up-to-date, version-specific documentation and code examples for a library.",
+  "parameters": {
+    "library_id": "Context7 library ID from resolve-library-id (required)",
+    "topic": "Specific topic to focus on (optional)",
+    "tokens": "Max tokens to return (optional, default varies)"
+  }
+}

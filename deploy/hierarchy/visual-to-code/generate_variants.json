@@ -1,0 +1,27 @@
+{
+  "tools": {
+    "generate_variants": {
+      "description": "Generate multiple code variants via delegation (NO API COSTS).\n\nCreates 2-6 variants with different temperatures (0.7-1.0+) by delegating to parent Claude Code agent. Each variant processed sequentially with subagent spawning to preserve context. Uses your Max subscription quota.\n\nReturns all variants with comparison table showing temperature, code size, and status.",
+      "maps_to": "generate_variants",
+      "server": "visual-to-code",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "image_path": {
+            "type": "string",
+            "description": "Absolute or relative path to design image file (PNG, JPG, JPEG, WEBP)"
+          },
+          "count": {
+            "type": "integer",
+            "description": "Number of variants to generate (2-6). Default is 4.",
+            "default": 4,
+            "minimum": 2,
+            "maximum": 6
+          }
+        },
+        "required": ["image_path"],
+        "additionalProperties": false
+      }
+    }
+  }
+}

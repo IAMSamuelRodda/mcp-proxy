@@ -1,0 +1,19 @@
+{
+  "tools": {
+    "cloudflare_purge_cache": {
+      "description": "Purge cache by URLs, tags, hosts, prefixes, or everything.\n\nImmediately invalidates cached content. Use selectively - purging everything impacts origin server load.\n\nExamples:\n- Purge all: purge_type='everything'\n- Purge URLs: purge_type='urls', items=['https://example.com/page1']\n- Purge tags: purge_type='tags', items=['tag1', 'tag2']",
+      "maps_to": "cloudflare_purge_cache",
+      "server": "cloudflare-full",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "zone": {"type": "string", "description": "Zone name or zone ID", "minLength": 1},
+          "purge_type": {"type": "string", "enum": ["everything", "urls", "tags", "hosts", "prefixes"], "description": "Purge type"},
+          "items": {"type": "array", "items": {"type": "string"}, "maxItems": 500, "description": "Items to purge (required except for 'everything')"}
+        },
+        "required": ["zone", "purge_type"],
+        "additionalProperties": false
+      }
+    }
+  }
+}

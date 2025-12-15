@@ -1,0 +1,20 @@
+{
+  "tools": {
+    "nextcloud_delete_event": {
+      "description": "\n    Delete an event from Nextcloud Calendar.\n\n    ⚠️ This action cannot be undone.\n\n    Args:\n        params: DeleteEventInput containing:\n            - event_uid: The event UID to delete\n            - calendar_name: Calendar where event is located (optional)\n\n    Returns:\n        Confirmation that the event was deleted.\n    ",
+      "maps_to": "nextcloud_delete_event",
+      "server": "nextcloud-calendar",
+      "inputSchema": {
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/DeleteEventInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "type": "object"
+      }
+    }
+  }
+}

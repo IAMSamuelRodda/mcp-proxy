@@ -1,4 +1,4 @@
-.PHONY: build clean deploy generate-hierarchy test install-deps
+.PHONY: build clean deploy deploy-full deploy-hierarchy generate-hierarchy test install-deps
 
 # Build output directory
 BUILD_DIR := build
@@ -37,12 +37,38 @@ generate-hierarchy: build
 	./$(BUILD_DIR)/$(STRUCTURE_GEN) --config $(CONFIG_FILE) --output deploy/hierarchy
 	@echo "Hierarchy generated in deploy/hierarchy/"
 
-deploy: build generate-hierarchy
-	@echo "Deploying to $(DEPLOY_DIR)..."
+# Deploy only the binary (safe - doesn't touch config or hierarchy)
+deploy: build
+	@echo "Deploying binary to $(DEPLOY_DIR)..."
 	@mkdir -p $(DEPLOY_DIR)
 	cp $(BUILD_DIR)/$(BINARY) $(DEPLOY_DIR)/
-	cp $(CONFIG_FILE) $(DEPLOY_DIR)/
+	@echo "Binary deployed. Config and hierarchy unchanged."
+
+# Deploy hierarchy from repo to install location
+deploy-hierarchy:
+	@echo "Deploying hierarchy to $(DEPLOY_DIR)..."
+	@if [ ! -d deploy/hierarchy ]; then \
+		echo "ERROR: deploy/hierarchy not found. Run 'make generate-hierarchy' first."; \
+		exit 1; \
+	fi
 	cp -r deploy/hierarchy $(DEPLOY_DIR)/
+	@echo "Hierarchy deployed."
+
+# Full deploy: binary + config + hierarchy (use with caution)
+deploy-full: build
+	@echo "Full deploy to $(DEPLOY_DIR)..."
+	@mkdir -p $(DEPLOY_DIR)
+	cp $(BUILD_DIR)/$(BINARY) $(DEPLOY_DIR)/
+	@if [ -f $(CONFIG_FILE) ]; then \
+		cp $(CONFIG_FILE) $(DEPLOY_DIR)/; \
+	else \
+		echo "No config/config.json - keeping existing config"; \
+	fi
+	@if [ -d deploy/hierarchy ]; then \
+		cp -r deploy/hierarchy $(DEPLOY_DIR)/; \
+	else \
+		echo "No deploy/hierarchy - keeping existing hierarchy"; \
+	fi
 	@echo ""
 	@echo "Deployment complete!"
 	@echo ""

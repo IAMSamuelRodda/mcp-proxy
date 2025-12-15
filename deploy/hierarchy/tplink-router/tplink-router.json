@@ -1,0 +1,3 @@
+{
+  "overview": "tplink-router: 3 tools; tplink_list_devices -> List connected devices with IPs/MACs, tplink_list_reservations -> Show DHCP static IP reservations, tplink_get_status -> Router health and network overview"
+}

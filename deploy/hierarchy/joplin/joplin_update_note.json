@@ -1,0 +1,20 @@
+{
+  "tools": {
+    "joplin_update_note": {
+      "description": "\n    Update note title, body, or move to different notebook. Partial updates OK.\n\n    Only provided fields are changed. Can convert to/from to-do,\n    mark complete, or move between notebooks.\n\n    Args:\n        params: UpdateNoteInput containing:\n            - note_id: The note ID to update (required)\n            - title: New title (optional)\n            - body: New Markdown content (optional)\n            - notebook_id: Move to different notebook (optional)\n            - is_todo: Convert to/from to-do (optional)\n            - todo_completed: Mark to-do complete (optional)\n\n    Returns:\n        Confirmation that the note was updated.\n    ",
+      "maps_to": "joplin_update_note",
+      "server": "joplin",
+      "inputSchema": {
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/UpdateNoteInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "type": "object"
+      }
+    }
+  }
+}

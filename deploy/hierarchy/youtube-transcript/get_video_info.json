@@ -1,0 +1,7 @@
+{
+  "name": "get_video_info",
+  "description": "Get available transcript languages (manual and auto-generated) for a YouTube video.",
+  "parameters": {
+    "video_url": "YouTube video URL or video ID (required)"
+  }
+}

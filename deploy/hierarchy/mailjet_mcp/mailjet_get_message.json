@@ -1,0 +1,25 @@
+{
+  "tools": {
+    "mailjet_get_message": {
+      "description": "Get message details (status, delivery, tracking).\n\nRetrieve complete details of a specific sent message including\nstatus, recipient, delivery timestamp, and tracking information.",
+      "maps_to": "mailjet_get_message",
+      "server": "mailjet",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "message_id": {
+            "type": "string",
+            "description": "Mailjet message ID to retrieve"
+          },
+          "response_format": {
+            "type": "string",
+            "enum": ["markdown", "json"],
+            "description": "Output format: 'markdown' or 'json'"
+          }
+        },
+        "required": ["message_id"],
+        "additionalProperties": false
+      }
+    }
+  }
+}

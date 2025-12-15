@@ -1,0 +1,29 @@
+{
+  "tools": {
+    "mailjet_create_contact": {
+      "description": "Create contact (with optional name and exclusion status).\n\nAdd a new contact to your Mailjet account with optional metadata.\nContacts can be excluded from campaigns at creation time.",
+      "maps_to": "mailjet_create_contact",
+      "server": "mailjet",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "Contact email address",
+            "pattern": "^[\\w\\.-]+@[\\w\\.-]+\\.\\w+$"
+          },
+          "name": {
+            "type": "string",
+            "description": "Contact name"
+          },
+          "is_excluded": {
+            "type": "boolean",
+            "description": "Whether contact is excluded from sending"
+          }
+        },
+        "required": ["email"],
+        "additionalProperties": false
+      }
+    }
+  }
+}

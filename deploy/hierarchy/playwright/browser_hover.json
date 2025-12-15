@@ -1,0 +1,24 @@
+{
+  "tools": {
+    "browser_hover": {
+      "description": "Hover mouse over element. Useful for triggering tooltips, dropdown menus, or hover states.",
+      "maps_to": "browser_hover",
+      "server": "playwright",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "element": {
+            "type": "string",
+            "description": "Human-readable element description"
+          },
+          "ref": {
+            "type": "string",
+            "description": "Exact target element reference from the page snapshot"
+          }
+        },
+        "required": ["element", "ref"],
+        "additionalProperties": false
+      }
+    }
+  }
+}

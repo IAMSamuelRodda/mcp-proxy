@@ -1,0 +1,24 @@
+{
+  "tools": {
+    "browser_resize": {
+      "description": "Resize browser viewport. Set width and height in pixels. Useful for testing responsive layouts.",
+      "maps_to": "browser_resize",
+      "server": "playwright",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "width": {
+            "type": "number",
+            "description": "Width of the browser window"
+          },
+          "height": {
+            "type": "number",
+            "description": "Height of the browser window"
+          }
+        },
+        "required": ["width", "height"],
+        "additionalProperties": false
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "tools": {
+    "browser_run_code": {
+      "description": "Execute Playwright code snippet. Access page via `page` object. Example: `await page.getByRole('button').click();`",
+      "maps_to": "browser_run_code",
+      "server": "playwright",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Playwright code snippet to run. The snippet should access the `page` object to interact with the page."
+          }
+        },
+        "required": ["code"],
+        "additionalProperties": false
+      }
+    }
+  }
+}

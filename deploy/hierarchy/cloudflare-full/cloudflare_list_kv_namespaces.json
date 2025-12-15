@@ -1,0 +1,18 @@
+{
+  "tools": {
+    "cloudflare_list_kv_namespaces": {
+      "description": "List Workers KV namespaces with IDs for storage operations.\n\nReturns all KV namespaces in account with namespace IDs needed for key-value operations.",
+      "maps_to": "cloudflare_list_kv_namespaces",
+      "server": "cloudflare-full",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "page": {"type": "integer", "description": "Page number", "minimum": 1, "default": 1},
+          "per_page": {"type": "integer", "description": "Results per page", "minimum": 1, "maximum": 100, "default": 50},
+          "response_format": {"type": "string", "enum": ["markdown", "json"], "default": "markdown", "description": "Output format"}
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "tools": {
+    "browser_network_requests": {
+      "description": "List all network requests made since page load. Useful for debugging API calls and resource loading.",
+      "maps_to": "browser_network_requests",
+      "server": "playwright",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "tools": {
+    "stalwart_queue_stop": {
+      "description": "Stop/pause mail queue processing. Prevents new delivery attempts.\n\nUse during maintenance or to hold all outgoing mail.",
+      "maps_to": "stalwart_queue_stop",
+      "server": "stalwart",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "tools": {
+    "joplin_ensure_running": {
+      "description": "\n    Ensure API ready. Launches Joplin if needed, waits for connection.\n\n    Use proactively before batch operations to avoid cold-start delays.\n    Returns immediately if already running. Useful for session pre-warming.\n\n    Returns:\n        Status message: 'already_running', 'launched', or error details.\n    ",
+      "maps_to": "joplin_ensure_running",
+      "server": "joplin",
+      "inputSchema": {
+        "type": "object"
+      }
+    }
+  }
+}

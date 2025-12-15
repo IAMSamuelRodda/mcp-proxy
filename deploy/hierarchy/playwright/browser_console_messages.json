@@ -1,0 +1,19 @@
+{
+  "tools": {
+    "browser_console_messages": {
+      "description": "Get console messages from the page. Set onlyErrors=true to filter to error messages only.",
+      "maps_to": "browser_console_messages",
+      "server": "playwright",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "onlyErrors": {
+            "type": "boolean",
+            "description": "Only return error messages"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

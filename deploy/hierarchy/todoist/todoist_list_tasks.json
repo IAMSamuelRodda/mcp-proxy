@@ -1,0 +1,20 @@
+{
+  "tools": {
+    "todoist_list_tasks": {
+      "description": "\n    List tasks from Todoist with optional filters.\n\n    Supports filtering by project, label, or using Todoist's filter syntax.\n    Common filters: 'today', 'tomorrow', 'overdue', 'p1', 'p2', 'no due date',\n    'due before: tomorrow', '7 days', '@label_name', '#project_name'.\n\n    Args:\n        params: ListTasksInput containing:\n            - project_id: Filter by project\n            - label: Filter by label name\n            - filter: Todoist filter query\n            - limit: Maximum tasks to return\n            - response_format: 'markdown' or 'json'\n\n    Returns:\n        List of tasks with their content, due dates, and priorities.\n    ",
+      "maps_to": "todoist_list_tasks",
+      "server": "todoist",
+      "inputSchema": {
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/ListTasksInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "type": "object"
+      }
+    }
+  }
+}

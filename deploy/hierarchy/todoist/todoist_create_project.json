@@ -1,0 +1,20 @@
+{
+  "tools": {
+    "todoist_create_project": {
+      "description": "\n    Create a new project in Todoist.\n\n    Args:\n        params: CreateProjectInput containing:\n            - name: Project name\n            - parent_id: Optional parent project ID for sub-projects\n            - color: Optional color name\n            - is_favorite: Whether to mark as favorite\n\n    Returns:\n        Created project details including the new project ID.\n    ",
+      "maps_to": "todoist_create_project",
+      "server": "todoist",
+      "inputSchema": {
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/CreateProjectInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "type": "object"
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "tools": {
+    "ensure_delegation_ready": {
+      "description": "Ensure parent monitoring system is running and ready (WARMUP).\n\nUse proactively before generation tasks to verify parent agent monitoring is active. Returns immediately if monitoring is ready. Useful for batch operations to avoid cold-start delays.\n\nPings delegation system and waits max 5 seconds for response.",
+      "maps_to": "ensure_delegation_ready",
+      "server": "visual-to-code",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      }
+    }
+  }
+}

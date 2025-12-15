@@ -1,0 +1,3 @@
+{
+  "overview": "cloudflare: 6 tools; cloudflare_list_zones -> List all zones (domains) in Cloudflare account, cloudflare_get_zone -> Get zone details by name or ID, cloudflare_list_dns_records -> List DNS records with type/name filters, cloudflare_create_dns_record -> Create A/AAAA/CNAME/MX/TXT records, cloudflare_update_dns_record -> Update existing DNS record by ID, cloudflare_delete_dns_record -> Delete DNS record permanently"
+}

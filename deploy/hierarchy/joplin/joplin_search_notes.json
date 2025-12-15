@@ -1,0 +1,20 @@
+{
+  "tools": {
+    "joplin_search_notes": {
+      "description": "\n    Search notes. Supports title:, body:, tag:, notebook:, type: prefixes.\n\n    Examples: \"tag:work type:todo\", \"title:meeting\", \"notebook:Projects\".\n    Also supports created:, updated: date filters and iscompleted:1/0.\n\n    Args:\n        params: SearchNotesInput containing:\n            - query: Search query with optional prefixes\n            - limit: Maximum results (default 20)\n            - response_format: 'markdown' or 'json'\n\n    Returns:\n        Matching notes with their details.\n    ",
+      "maps_to": "joplin_search_notes",
+      "server": "joplin",
+      "inputSchema": {
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/SearchNotesInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "type": "object"
+      }
+    }
+  }
+}

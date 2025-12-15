@@ -1,0 +1,20 @@
+{
+  "tools": {
+    "joplin_list_tags": {
+      "description": "\n    List all tags with IDs. Use for tag: search prefix or tag_note operations.\n\n    Returns alphabetically sorted list. Tags are reusable across notes.\n\n    Args:\n        params: ListTagsInput containing:\n            - response_format: 'markdown' or 'json'\n\n    Returns:\n        List of tags with IDs.\n    ",
+      "maps_to": "joplin_list_tags",
+      "server": "joplin",
+      "inputSchema": {
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/ListTagsInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "type": "object"
+      }
+    }
+  }
+}

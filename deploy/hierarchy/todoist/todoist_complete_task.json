@@ -1,0 +1,20 @@
+{
+  "tools": {
+    "todoist_complete_task": {
+      "description": "\n    Mark a task as complete.\n\n    For recurring tasks, this will close the current occurrence and create the next one.\n\n    Args:\n        params: CompleteTaskInput containing:\n            - task_id: The task ID to complete\n\n    Returns:\n        Confirmation that the task was completed.\n    ",
+      "maps_to": "todoist_complete_task",
+      "server": "todoist",
+      "inputSchema": {
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/CompleteTaskInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "type": "object"
+      }
+    }
+  }
+}

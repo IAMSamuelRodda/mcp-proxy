@@ -1,0 +1,24 @@
+{
+  "tools": {
+    "stalwart_get_account": {
+      "description": "Get account details by name. Returns emails, quota, roles, settings.\n\nUse after list_accounts to get full details of a specific account.",
+      "maps_to": "stalwart_get_account",
+      "server": "stalwart",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "type": "object",
+            "properties": {
+              "account_name": { "type": "string", "description": "Username to retrieve" },
+              "response_format": { "type": "string", "enum": ["markdown", "json"], "default": "markdown" }
+            },
+            "required": ["account_name"]
+          }
+        },
+        "required": ["params"],
+        "additionalProperties": false
+      }
+    }
+  }
+}

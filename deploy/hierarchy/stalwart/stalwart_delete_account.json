@@ -1,0 +1,23 @@
+{
+  "tools": {
+    "stalwart_delete_account": {
+      "description": "Delete account permanently. Removes mailbox and all data. Cannot undo.",
+      "maps_to": "stalwart_delete_account",
+      "server": "stalwart",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "type": "object",
+            "properties": {
+              "account_name": { "type": "string", "description": "Account to delete" }
+            },
+            "required": ["account_name"]
+          }
+        },
+        "required": ["params"],
+        "additionalProperties": false
+      }
+    }
+  }
+}

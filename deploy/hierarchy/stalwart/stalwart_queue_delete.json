@@ -1,0 +1,23 @@
+{
+  "tools": {
+    "stalwart_queue_delete": {
+      "description": "Delete message from queue permanently. Cancels delivery, cannot undo.",
+      "maps_to": "stalwart_queue_delete",
+      "server": "stalwart",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "type": "object",
+            "properties": {
+              "message_id": { "type": "string", "description": "Queue message ID" }
+            },
+            "required": ["message_id"]
+          }
+        },
+        "required": ["params"],
+        "additionalProperties": false
+      }
+    }
+  }
+}

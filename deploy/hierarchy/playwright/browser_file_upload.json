@@ -1,0 +1,20 @@
+{
+  "tools": {
+    "browser_file_upload": {
+      "description": "Upload files to file input. Provide absolute paths array. Omit paths to cancel file chooser.",
+      "maps_to": "browser_file_upload",
+      "server": "playwright",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "paths": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "The absolute paths to the files to upload"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "tools": {
+    "mailjet_get_account_info": {
+      "description": "Get account info (username, timezone, daily/monthly limits).\n\nRetrieve your Mailjet account profile including contact information,\ntimezone, email sending quotas, and usage limits.",
+      "maps_to": "mailjet_get_account_info",
+      "server": "mailjet",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "response_format": {
+            "type": "string",
+            "enum": ["markdown", "json"],
+            "description": "Output format: 'markdown' or 'json'"
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      }
+    }
+  }
+}

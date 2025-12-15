@@ -1,0 +1,20 @@
+{
+  "tools": {
+    "nextcloud_list_calendars": {
+      "description": "\n    List all calendars in your Nextcloud account.\n\n    Returns all calendars you have access to, including shared calendars.\n    Use this to get calendar names for other operations.\n\n    Args:\n        params: ListCalendarsInput containing:\n            - response_format: 'markdown' or 'json'\n\n    Returns:\n        List of calendars with their names and properties.\n    ",
+      "maps_to": "nextcloud_list_calendars",
+      "server": "nextcloud-calendar",
+      "inputSchema": {
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/ListCalendarsInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "type": "object"
+      }
+    }
+  }
+}

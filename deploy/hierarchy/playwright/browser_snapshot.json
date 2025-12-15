@@ -1,0 +1,14 @@
+{
+  "tools": {
+    "browser_snapshot": {
+      "description": "Get page accessibility snapshot with element refs. Use this before click/type/hover actions to get element references. Better than screenshot for interactions.",
+      "maps_to": "browser_snapshot",
+      "server": "playwright",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      }
+    }
+  }
+}

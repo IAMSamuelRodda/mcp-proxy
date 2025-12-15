@@ -1,0 +1,20 @@
+{
+  "tools": {
+    "nextcloud_search_events": {
+      "description": "\n    Search for events by text in summary, description, or location.\n\n    Searches across a date range (default: 30 days ago to 90 days ahead).\n\n    Args:\n        params: SearchEventsInput containing:\n            - query: Search text\n            - calendar_name: Calendar to search in (optional)\n            - start_date: Start of search range\n            - end_date: End of search range\n            - limit: Maximum results\n            - response_format: 'markdown' or 'json'\n\n    Returns:\n        Matching events with their details.\n    ",
+      "maps_to": "nextcloud_search_events",
+      "server": "nextcloud-calendar",
+      "inputSchema": {
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/SearchEventsInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "type": "object"
+      }
+    }
+  }
+}

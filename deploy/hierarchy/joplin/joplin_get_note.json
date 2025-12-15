@@ -1,0 +1,20 @@
+{
+  "tools": {
+    "joplin_get_note": {
+      "description": "\n    Get note by ID with full Markdown content. Includes metadata and body.\n\n    Use after list_notes or search_notes to retrieve full content.\n    Set include_body=false for metadata only.\n\n    Args:\n        params: GetNoteInput containing:\n            - note_id: The note ID (required)\n            - include_body: Include full content (default true)\n            - response_format: 'markdown' or 'json'\n\n    Returns:\n        Note details including content if requested.\n    ",
+      "maps_to": "joplin_get_note",
+      "server": "joplin",
+      "inputSchema": {
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/GetNoteInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "type": "object"
+      }
+    }
+  }
+}

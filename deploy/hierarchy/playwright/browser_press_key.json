@@ -1,0 +1,20 @@
+{
+  "tools": {
+    "browser_press_key": {
+      "description": "Press keyboard key. Examples: ArrowLeft, ArrowRight, Enter, Escape, Tab, a, A. For typing text, use browser_type instead.",
+      "maps_to": "browser_press_key",
+      "server": "playwright",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Name of the key to press or a character to generate, such as ArrowLeft or a"
+          }
+        },
+        "required": ["key"],
+        "additionalProperties": false
+      }
+    }
+  }
+}

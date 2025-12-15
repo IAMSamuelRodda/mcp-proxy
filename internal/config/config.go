@@ -1,8 +1,8 @@
 package config
 
 import (
-	"crypto/tls"
 	"errors"
+	"fmt"
 	nethttp "net/http"
 	"strings"
 	"time"
@@ -98,10 +98,41 @@ type MCPClientConfigV2 struct {
 	Options *OptionsV2 `json:"options,omitempty"`
 }
 
+// validateStdioCommand checks for command injection patterns in stdio config
+func validateStdioCommand(command string, args []string) error {
+	// Check for shell metacharacters that could indicate injection
+	dangerousPatterns := []string{";", "|", "&&", "||", "`", "$(", "${", ">", "<", "&"}
+
+	for _, pattern := range dangerousPatterns {
+		if strings.Contains(command, pattern) {
+			return fmt.Errorf("command contains potentially dangerous pattern %q - use absolute paths", pattern)
+		}
+		for i, arg := range args {
+			if strings.Contains(arg, pattern) {
+				return fmt.Errorf("args[%d] contains potentially dangerous pattern %q", i, pattern)
+			}
+		}
+	}
+
+	// Warn (via error) if command is not an absolute path
+	if !strings.HasPrefix(command, "/") && command != "" {
+		// Allow common interpreters but log a note
+		allowedRelative := map[string]bool{"python": true, "python3": true, "node": true, "npx": true, "go": true, "ruby": true}
+		if !allowedRelative[command] {
+			return fmt.Errorf("command %q is not an absolute path - consider using full path for security", command)
+		}
+	}
+
+	return nil
+}
+
 func ParseMCPClientConfigV2(conf *MCPClientConfigV2) (any, error) {
 	if conf.Command != "" || conf.TransportType == MCPClientTypeStdio {
 		if conf.Command == "" {
 			return nil, errors.New("command is required for stdio transport")
+		}
+		if err := validateStdioCommand(conf.Command, conf.Args); err != nil {
+			return nil, fmt.Errorf("stdio command validation failed: %w", err)
 		}
 		return &StdioMCPClientConfig{
 			Command: conf.Command,
@@ -141,15 +172,10 @@ type FullConfig struct {
 	McpServers map[string]*MCPClientConfigV2 `json:"mcpServers"`
 }
 
-func newConfProvider(path string, insecure, expandEnv bool, httpHeaders string, httpTimeout int) (provider.Provider, error) {
+func newConfProvider(path string, expandEnv bool, httpHeaders string, httpTimeout int) (provider.Provider, error) {
 	if http.IsRemoteURL(path) {
 		var opts []http.Option
 		httpClient := nethttp.DefaultClient
-		if insecure {
-			transport := nethttp.DefaultTransport.(*nethttp.Transport).Clone()
-			transport.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
-			httpClient = &nethttp.Client{Transport: transport}
-		}
 		if httpTimeout > 0 {
 			httpClient.Timeout = time.Duration(httpTimeout) * time.Second
 		}
@@ -185,8 +211,21 @@ func newConfProvider(path string, insecure, expandEnv bool, httpHeaders string, 
 	return nil, errors.New("unsupported config path")
 }
 
-func Load(path string, insecure, expandEnv bool, httpHeaders string, httpTimeout int) (*Config, error) {
-	pro, err := newConfProvider(path, insecure, expandEnv, httpHeaders, httpTimeout)
+// MinTokenLength is the minimum required length for auth tokens (24 bytes = 32 base64 chars)
+const MinTokenLength = 24
+
+// validateAuthTokens checks that auth tokens meet minimum security requirements
+func validateAuthTokens(tokens []string) error {
+	for i, token := range tokens {
+		if len(token) < MinTokenLength {
+			return fmt.Errorf("authToken[%d] is too short (%d chars). Minimum %d chars required for security. Generate with: openssl rand -base64 32", i, len(token), MinTokenLength)
+		}
+	}
+	return nil
+}
+
+func Load(path string, expandEnv bool, httpHeaders string, httpTimeout int) (*Config, error) {
+	pro, err := newConfProvider(path, expandEnv, httpHeaders, httpTimeout)
 	if err != nil {
 		return nil, err
 	}
@@ -222,6 +261,13 @@ func Load(path string, insecure, expandEnv bool, httpHeaders string, httpTimeout
 
 	if conf.McpProxy.Type == "" {
 		conf.McpProxy.Type = MCPServerTypeSSE // default to SSE
+	}
+
+	// Validate auth token strength for HTTP server modes
+	if conf.McpProxy.Type != MCPServerTypeStdio && conf.McpProxy.Options != nil && len(conf.McpProxy.Options.AuthTokens) > 0 {
+		if err := validateAuthTokens(conf.McpProxy.Options.AuthTokens); err != nil {
+			return nil, fmt.Errorf("security validation failed: %w", err)
+		}
 	}
 
 	return &Config{

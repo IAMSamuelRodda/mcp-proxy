@@ -1,0 +1,3 @@
+{
+  "overview": "mailjet_mcp: 8 tools; mailjet_send_email -> Send email (text/HTML, tracking, custom IDs)., mailjet_get_message -> Get message details (status, delivery, tracking)., mailjet_list_messages -> List messages with pagination and date filtering., mailjet_get_statistics -> Get sending stats (delivered, open/click rates, bounces)., mailjet_list_contacts -> List contacts with pagination and metadata., mailjet_create_contact -> Create contact (with optional name and exclusion status)., mailjet_list_senders -> List verified sender email addresses (status, created)., mailjet_get_account_info -> Get account info (username, timezone, daily/monthly limits)."
+}

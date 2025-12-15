@@ -1,0 +1,24 @@
+{
+  "tools": {
+    "cloudflare_delete_dns_record": {
+      "description": "Delete a DNS record permanently. This action cannot be undone.\n\nUse cloudflare_list_dns_records first to find the record ID.",
+      "maps_to": "cloudflare_delete_dns_record",
+      "server": "cloudflare",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "zone": {
+            "type": "string",
+            "description": "Zone name or zone ID"
+          },
+          "record_id": {
+            "type": "string",
+            "description": "DNS record ID to delete"
+          }
+        },
+        "required": ["zone", "record_id"],
+        "additionalProperties": false
+      }
+    }
+  }
+}

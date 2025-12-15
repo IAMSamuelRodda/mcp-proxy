@@ -1,0 +1,20 @@
+{
+  "tools": {
+    "todoist_reopen_task": {
+      "description": "\n    Reopen a completed task.\n\n    Args:\n        params: ReopenTaskInput containing:\n            - task_id: The task ID to reopen\n\n    Returns:\n        Confirmation that the task was reopened.\n    ",
+      "maps_to": "todoist_reopen_task",
+      "server": "todoist",
+      "inputSchema": {
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/ReopenTaskInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "type": "object"
+      }
+    }
+  }
+}

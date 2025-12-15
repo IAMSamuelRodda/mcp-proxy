@@ -1,0 +1,20 @@
+{
+  "tools": {
+    "nextcloud_list_events": {
+      "description": "\n    List events from Nextcloud Calendar within a date range.\n\n    Defaults to showing events for the next 7 days if no dates specified.\n\n    Args:\n        params: ListEventsInput containing:\n            - calendar_name: Filter by calendar (optional)\n            - start_date: Start of date range (YYYY-MM-DD)\n            - end_date: End of date range (YYYY-MM-DD)\n            - limit: Maximum events to return\n            - response_format: 'markdown' or 'json'\n\n    Returns:\n        List of events with their details.\n    ",
+      "maps_to": "nextcloud_list_events",
+      "server": "nextcloud-calendar",
+      "inputSchema": {
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/ListEventsInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "type": "object"
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "tools": {
+    "todoist_update_task": {
+      "description": "\n    Update an existing task in Todoist.\n\n    Only provided fields will be updated. To clear a due date, use the Todoist app.\n\n    Args:\n        params: UpdateTaskInput containing:\n            - task_id: The task ID to update\n            - content: New task title\n            - description: New description\n            - due_string: New due date (natural language)\n            - due_date: New due date (YYYY-MM-DD)\n            - priority: New priority (1-4)\n            - labels: New labels (replaces existing)\n\n    Returns:\n        Updated task confirmation.\n    ",
+      "maps_to": "todoist_update_task",
+      "server": "todoist",
+      "inputSchema": {
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/UpdateTaskInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "type": "object"
+      }
+    }
+  }
+}

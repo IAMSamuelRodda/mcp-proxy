@@ -1,0 +1,20 @@
+{
+  "tools": {
+    "todoist_get_task": {
+      "description": "\n    Get details of a specific task.\n\n    Args:\n        params: GetTaskInput containing:\n            - task_id: The task ID\n            - response_format: 'markdown' or 'json'\n\n    Returns:\n        Full task details including content, description, due date, and labels.\n    ",
+      "maps_to": "todoist_get_task",
+      "server": "todoist",
+      "inputSchema": {
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/GetTaskInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "type": "object"
+      }
+    }
+  }
+}

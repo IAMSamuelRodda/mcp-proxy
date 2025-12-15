@@ -1,0 +1,22 @@
+{
+  "tools": {
+    "stalwart_get_metrics": {
+      "description": "Get server performance metrics. Shows message counts, connections, errors.\n\nIncludes SMTP, IMAP, and delivery statistics.",
+      "maps_to": "stalwart_get_metrics",
+      "server": "stalwart",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "type": "object",
+            "properties": {
+              "response_format": { "type": "string", "enum": ["markdown", "json"], "default": "markdown" }
+            }
+          }
+        },
+        "required": ["params"],
+        "additionalProperties": false
+      }
+    }
+  }
+}

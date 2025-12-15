@@ -1,0 +1,14 @@
+{
+  "tools": {
+    "stalwart_reload_config": {
+      "description": "Reload server configuration without restart. Applies pending changes.\n\nSafe to call - doesn't interrupt active connections.",
+      "maps_to": "stalwart_reload_config",
+      "server": "stalwart",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "tools": {
+    "stalwart_list_queue": {
+      "description": "List messages in delivery queue. Filter by sender or recipient.\n\nShows pending messages, delivery attempts, and next retry time.",
+      "maps_to": "stalwart_list_queue",
+      "server": "stalwart",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "type": "object",
+            "properties": {
+              "limit": { "type": "integer", "default": 50, "description": "Maximum messages" },
+              "filter_from": { "type": "string", "description": "Filter by sender" },
+              "filter_to": { "type": "string", "description": "Filter by recipient" },
+              "response_format": { "type": "string", "enum": ["markdown", "json"], "default": "markdown" }
+            }
+          }
+        },
+        "required": ["params"],
+        "additionalProperties": false
+      }
+    }
+  }
+}

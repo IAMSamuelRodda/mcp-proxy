@@ -1,0 +1,18 @@
+{
+  "tools": {
+    "cloudflare_deploy_worker": {
+      "description": "Deploy/update Worker script with JavaScript content.\n\nUploads and deploys Worker script to Cloudflare edge network. Updates if exists.",
+      "maps_to": "cloudflare_deploy_worker",
+      "server": "cloudflare-full",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "script_name": {"type": "string", "description": "Worker script name", "minLength": 1, "maxLength": 255},
+          "script_content": {"type": "string", "description": "JavaScript worker script content", "minLength": 1}
+        },
+        "required": ["script_name", "script_content"],
+        "additionalProperties": false
+      }
+    }
+  }
+}
