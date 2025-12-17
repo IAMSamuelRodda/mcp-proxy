@@ -34,9 +34,11 @@ type Config struct {
 
 // ServerConfig defines how to connect to an MCP server
 type ServerConfig struct {
-	Command string            `json:"command"`
-	Args    []string          `json:"args"`
-	Env     map[string]string `json:"env,omitempty"`
+	TransportType string            `json:"transportType"` // "stdio", "sse", "http"
+	Command       string            `json:"command"`
+	Args          []string          `json:"args"`
+	URL           string            `json:"url"` // For SSE/HTTP transports
+	Env           map[string]string `json:"env,omitempty"`
 }
 
 func main() {
@@ -180,6 +182,32 @@ func fetchFromConfig(configPath string) ([]generator.ServerTools, error) {
 
 // fetchToolsFromServer connects to an MCP server and fetches all tools
 func fetchToolsFromServer(ctx context.Context, name string, config ServerConfig) (generator.ServerTools, error) {
+	// Determine transport type (default to stdio if not specified)
+	transportType := config.TransportType
+	if transportType == "" {
+		transportType = "stdio"
+	}
+
+	// Handle different transport types
+	switch transportType {
+	case "stdio":
+		return fetchToolsFromStdioServer(ctx, name, config)
+	case "sse":
+		return fetchToolsFromSSEServer(ctx, name, config)
+	case "http":
+		return fetchToolsFromHTTPServer(ctx, name, config)
+	default:
+		return generator.ServerTools{}, fmt.Errorf("unsupported transport type: %s", transportType)
+	}
+}
+
+// fetchToolsFromStdioServer fetches tools from a stdio-based MCP server
+func fetchToolsFromStdioServer(ctx context.Context, name string, config ServerConfig) (generator.ServerTools, error) {
+	// Validate command is not empty
+	if config.Command == "" {
+		return generator.ServerTools{}, fmt.Errorf("command is required for stdio transport")
+	}
+
 	log.Printf("[%s] Creating stdio client: %s %v", name, config.Command, config.Args)
 
 	// Expand environment variables in args
@@ -188,8 +216,17 @@ func fetchToolsFromServer(ctx context.Context, name string, config ServerConfig)
 		expandedArgs[i] = os.ExpandEnv(arg)
 	}
 
+	// Convert env map to slice (KEY=VALUE format)
+	var envSlice []string
+	for key, value := range config.Env {
+		envSlice = append(envSlice, fmt.Sprintf("%s=%s", key, os.ExpandEnv(value)))
+	}
+	if len(envSlice) > 0 {
+		log.Printf("[%s] Environment: %v", name, envSlice)
+	}
+
 	// Create MCP client
-	mcpClient, err := client.NewStdioMCPClient(config.Command, []string{}, expandedArgs...)
+	mcpClient, err := client.NewStdioMCPClient(config.Command, envSlice, expandedArgs...)
 	if err != nil {
 		return generator.ServerTools{}, fmt.Errorf("failed to create client: %w", err)
 	}
@@ -199,6 +236,113 @@ func fetchToolsFromServer(ctx context.Context, name string, config ServerConfig)
 	log.Printf("[%s] Client created, initializing...", name)
 
 	// Create our own context with timeout (don't use the passed ctx)
+	localCtx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	// Initialize connection
+	initRequest := mcp.InitializeRequest{}
+	initRequest.Params.ProtocolVersion = mcp.LATEST_PROTOCOL_VERSION
+	initRequest.Params.ClientInfo = mcp.Implementation{
+		Name:    "structure-generator",
+		Version: "1.0.0",
+	}
+	initRequest.Params.Capabilities = mcp.ClientCapabilities{}
+
+	if _, err := mcpClient.Initialize(localCtx, initRequest); err != nil {
+		return generator.ServerTools{}, fmt.Errorf("failed to initialize: %w", err)
+	}
+
+	log.Printf("[%s] Initialized successfully", name)
+
+	// Fetch all tools
+	var allTools []generator.Tool
+	toolsRequest := mcp.ListToolsRequest{}
+
+	log.Printf("[%s] Listing tools...", name)
+	toolsResult, err := mcpClient.ListTools(localCtx, toolsRequest)
+	if err != nil {
+		return generator.ServerTools{}, fmt.Errorf("failed to list tools: %w", err)
+	}
+
+	// Convert mcp.Tool to generator.Tool
+	for _, mcpTool := range toolsResult.Tools {
+		tool := generator.Tool{
+			Name:        mcpTool.Name,
+			Description: mcpTool.Description,
+			InputSchema: convertToolInputSchema(mcpTool.InputSchema),
+		}
+		allTools = append(allTools, tool)
+	}
+
+	return generator.ServerTools{
+		ServerName: name,
+		Tools:      allTools,
+	}, nil
+}
+
+// fetchToolsFromSSEServer fetches tools from an SSE-based MCP server (deprecated)
+func fetchToolsFromSSEServer(ctx context.Context, name string, config ServerConfig) (generator.ServerTools, error) {
+	// Validate URL is not empty
+	if config.URL == "" {
+		return generator.ServerTools{}, fmt.Errorf("url is required for SSE transport")
+	}
+
+	log.Printf("[%s] Creating SSE client: %s", name, config.URL)
+
+	// Create SSE MCP client
+	mcpClient, err := client.NewSSEMCPClient(config.URL)
+	if err != nil {
+		return generator.ServerTools{}, fmt.Errorf("failed to create SSE client: %w", err)
+	}
+	defer mcpClient.Close()
+
+	log.Printf("[%s] SSE client created, starting...", name)
+
+	// Start the client with timeout
+	startCtx, startCancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer startCancel()
+
+	if err := mcpClient.Start(startCtx); err != nil {
+		return generator.ServerTools{}, fmt.Errorf("failed to start SSE client: %w", err)
+	}
+
+	return fetchToolsFromRemoteClient(ctx, name, mcpClient)
+}
+
+// fetchToolsFromHTTPServer fetches tools from an HTTP Streamable MCP server
+func fetchToolsFromHTTPServer(ctx context.Context, name string, config ServerConfig) (generator.ServerTools, error) {
+	// Validate URL is not empty
+	if config.URL == "" {
+		return generator.ServerTools{}, fmt.Errorf("url is required for HTTP transport")
+	}
+
+	log.Printf("[%s] Creating HTTP Streamable client: %s", name, config.URL)
+
+	// Create HTTP Streamable MCP client
+	mcpClient, err := client.NewStreamableHttpClient(config.URL)
+	if err != nil {
+		return generator.ServerTools{}, fmt.Errorf("failed to create HTTP client: %w", err)
+	}
+	defer mcpClient.Close()
+
+	log.Printf("[%s] HTTP client created, starting...", name)
+
+	// Start the client with timeout
+	startCtx, startCancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer startCancel()
+
+	if err := mcpClient.Start(startCtx); err != nil {
+		return generator.ServerTools{}, fmt.Errorf("failed to start HTTP client: %w", err)
+	}
+
+	return fetchToolsFromRemoteClient(ctx, name, mcpClient)
+}
+
+// fetchToolsFromRemoteClient is a helper that fetches tools from any initialized remote client
+func fetchToolsFromRemoteClient(ctx context.Context, name string, mcpClient *client.Client) (generator.ServerTools, error) {
+	log.Printf("[%s] Remote client started, initializing...", name)
+
+	// Create our own context with timeout
 	localCtx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 

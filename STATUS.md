@@ -3,7 +3,7 @@
 > **Purpose:** Current project state and active work (2-week rolling window)
 > **Lifecycle:** Living document, updated daily/weekly
 
-**Last Updated:** 2025-12-16
+**Last Updated:** 2025-12-18
 
 ## Quick Overview
 
@@ -11,21 +11,19 @@
 |--------|--------|
 | Build | Working |
 | Deployment | Deployed to ~/.claude/lazy-mcp/ |
-| Testing | Passed |
+| Testing | Passed (13 servers, 136 tools) |
 | GitHub | Published |
 
 ## Current Focus
 
-### This Week: Security Hardening & Repo Cleanup
+### This Week: Structure Generator Fixes
 
-- [x] STRIDE threat model security audit
-- [x] Add auth token validation (24+ char minimum)
-- [x] Add command injection protection for stdio configs
-- [x] Remove --insecure flag (unused)
-- [x] Audit full MCP server setup (11 servers, 102 tools)
-- [x] Separate personal configs from public repo
-- [x] Create SETUP.md guide for installation
-- [ ] Merge dev/security-hardening to main
+- [x] Fix nil pointer panic in structure_generator (context7 SSE transport)
+- [x] Add HTTP Streamable transport support (context7 now works)
+- [x] Add environment variable passthrough for stdio servers
+- [x] Fix vikunja timeout (PYTHONPATH not being passed)
+- [x] Update Makefile for direct hierarchy generation (no intermediate deploy/)
+- [x] Update context7 URL from deprecated /sse to /mcp
 
 ## Deployment Status
 
@@ -40,18 +38,20 @@
 ~/.claude/lazy-mcp/
 ├── mcp-proxy          # Go binary
 ├── config.json        # preloadAll: true enabled (gitignored - personal)
-└── hierarchy/         # Tool schemas (102 tools across 11 servers)
-    ├── joplin/
-    ├── todoist/
-    ├── nextcloud-calendar/
-    ├── cloudflare/
-    ├── cloudflare-full/
-    ├── mailjet_mcp/
-    ├── stalwart/
-    ├── tplink-router/
-    ├── visual-to-code/
-    ├── youtube-transcript/
-    └── context7/
+└── hierarchy/         # Tool schemas (136 tools across 13 servers)
+    ├── cloudflare/ (6)
+    ├── cloudflare-full/ (23)
+    ├── context7/ (2)
+    ├── joplin/ (11)
+    ├── mailjet_mcp/ (8)
+    ├── nextcloud-calendar/ (7)
+    ├── stalwart/ (24)
+    ├── stripe/ (7)
+    ├── todoist/ (12)
+    ├── tplink-router/ (3)
+    ├── vikunja/ (27)
+    ├── visual-to-code/ (3)
+    └── youtube-transcript/ (3)
 ```
 
 ## Known Issues
@@ -68,14 +68,17 @@
 
 ## Recent Achievements (Last 2 Weeks)
 
+### 2025-12-18
+- **Fixed structure_generator panic** - context7 SSE transport caused nil pointer
+- **Added multi-transport support** - stdio, SSE, and HTTP Streamable
+- **Fixed env var passthrough** - vikunja now works (PYTHONPATH)
+- **Direct hierarchy generation** - No intermediate deploy/ folder
+- **Full hierarchy** - 13 servers, 136 tools generated successfully
+
 ### 2025-12-16
 - **Security hardening** - STRIDE threat model audit, input validation
 - **Auth token validation** - 24+ character minimum with helpful error messages
 - **Command injection protection** - Block shell metacharacters in stdio configs
-- **Removed --insecure flag** - Unused, removed entirely
-- **Full MCP audit** - Discovered 102 tools across 11 servers
-- **Repo cleanup** - Personal configs gitignored, examples/ for public
-- **SETUP.md** - Claude Code guide for investigating and installing lazy-mcp
 
 ### 2025-11-27
 - Forked voicetreelab/lazy-mcp

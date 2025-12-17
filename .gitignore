@@ -19,8 +19,7 @@ Thumbs.db
 # Upstream reference (not needed in distribution)
 upstream-lazy-mcp/
 
-# Generated hierarchy (personal tool definitions)
-deploy/hierarchy/
+# Deploy folder no longer used - hierarchy generates directly to install location
 
 # Test output
 *.test

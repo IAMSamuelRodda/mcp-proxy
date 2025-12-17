@@ -3,7 +3,7 @@
 > **Purpose:** Track bugs, improvements, and technical debt for lazy-mcp-preload
 > **Lifecycle:** Living document, updated when issues change
 
-**Last Updated:** 2025-12-17
+**Last Updated:** 2025-12-18
 
 ---
 
@@ -26,6 +26,36 @@
 ## Active Issues
 
 ### Bugs
+
+---
+
+## Resolved Issues (Last 2 Weeks)
+
+#### issue_002: structure_generator panics on MCP server connection
+- **Status**: 🟢 Resolved
+- **Priority**: P0 (blocks hierarchy regeneration)
+- **Component**: structure_generator
+- **Discovered**: 2025-12-17
+- **Resolved**: 2025-12-18
+
+**Root Cause:**
+The `context7` server was configured with `transportType: "sse"` but had no `command` field. The `ServerConfig` struct only read `command/args/env` and ignored `transportType`. When `client.NewStdioMCPClient()` was called with an empty command, `mcp-go`'s `spawnCommand()` returned nil without error but didn't initialize `stdout`, causing a nil pointer panic in `readResponses()`.
+
+**Fix Applied:**
+1. Added `TransportType` and `URL` fields to `ServerConfig` struct
+2. Added validation to reject empty commands for stdio transport
+3. Added support for SSE transport (`client.NewSSEMCPClient`)
+4. Added support for HTTP Streamable transport (`client.NewStreamableHttpClient`)
+5. Updated context7 URL from deprecated `/sse` to `/mcp`
+6. Added missing `stripe` and `vikunja` servers to config
+
+**Result:**
+- 12 servers, 109 tools generated successfully
+- context7 works via HTTP Streamable transport
+- stripe included in hierarchy (7 tools)
+- vikunja times out (separate issue - needs Vikunja API running)
+
+---
 
 #### issue_001: Vikunja Tool Count Discrepancy (MOVED to vikunja-mcp)
 - **Status**: 🔵 Moved to vikunja-mcp repository

@@ -1,4 +1,4 @@
-.PHONY: build clean deploy deploy-full deploy-hierarchy generate-hierarchy test install-deps
+.PHONY: build clean deploy deploy-full generate-hierarchy test install-deps
 
 # Build output directory
 BUILD_DIR := build
@@ -7,7 +7,7 @@ STRUCTURE_GEN := structure_generator
 
 # Deployment paths
 DEPLOY_DIR := /home/x-forge/.claude/lazy-mcp
-CONFIG_FILE := config/config.json
+CONFIG_FILE := config/config.local.json
 
 # Go build flags
 LDFLAGS := -ldflags "-s -w"
@@ -31,11 +31,12 @@ install-deps:
 	go mod download
 	go mod tidy
 
+# Generate hierarchy directly to install location
 generate-hierarchy: build
-	@echo "Generating tool hierarchy..."
-	@mkdir -p deploy/hierarchy
-	./$(BUILD_DIR)/$(STRUCTURE_GEN) --config $(CONFIG_FILE) --output deploy/hierarchy
-	@echo "Hierarchy generated in deploy/hierarchy/"
+	@echo "Generating tool hierarchy to $(DEPLOY_DIR)/hierarchy..."
+	@mkdir -p $(DEPLOY_DIR)/hierarchy
+	./$(BUILD_DIR)/$(STRUCTURE_GEN) --config $(CONFIG_FILE) --output $(DEPLOY_DIR)/hierarchy
+	@echo "Hierarchy generated at $(DEPLOY_DIR)/hierarchy/"
 
 # Deploy only the binary (safe - doesn't touch config or hierarchy)
 deploy: build
@@ -44,30 +45,14 @@ deploy: build
 	cp $(BUILD_DIR)/$(BINARY) $(DEPLOY_DIR)/
 	@echo "Binary deployed. Config and hierarchy unchanged."
 
-# Deploy hierarchy from repo to install location
-deploy-hierarchy:
-	@echo "Deploying hierarchy to $(DEPLOY_DIR)..."
-	@if [ ! -d deploy/hierarchy ]; then \
-		echo "ERROR: deploy/hierarchy not found. Run 'make generate-hierarchy' first."; \
-		exit 1; \
-	fi
-	cp -r deploy/hierarchy $(DEPLOY_DIR)/
-	@echo "Hierarchy deployed."
-
-# Full deploy: binary + config + hierarchy (use with caution)
-deploy-full: build
+# Full deploy: binary + config + regenerate hierarchy
+deploy-full: build generate-hierarchy
 	@echo "Full deploy to $(DEPLOY_DIR)..."
-	@mkdir -p $(DEPLOY_DIR)
 	cp $(BUILD_DIR)/$(BINARY) $(DEPLOY_DIR)/
 	@if [ -f $(CONFIG_FILE) ]; then \
 		cp $(CONFIG_FILE) $(DEPLOY_DIR)/; \
 	else \
 		echo "No config/config.json - keeping existing config"; \
-	fi
-	@if [ -d deploy/hierarchy ]; then \
-		cp -r deploy/hierarchy $(DEPLOY_DIR)/; \
-	else \
-		echo "No deploy/hierarchy - keeping existing hierarchy"; \
 	fi
 	@echo ""
 	@echo "Deployment complete!"
