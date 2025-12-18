@@ -1,58 +1,42 @@
-# lazy-mcp-preload
+# mcp-proxy
 
-A fork of [voicetreelab/lazy-mcp](https://github.com/voicetreelab/lazy-mcp) with background server preloading for zero-latency MCP tool execution.
+An aggregating MCP proxy that reduces context window usage by ~95% while providing zero-latency tool execution.
 
-## Problem
+## How It Works
 
-lazy-mcp reduces context window usage by ~95% (from ~15,000 tokens to ~800 tokens for 30 tools). However, servers are started on-demand, causing ~500ms latency on first tool call to each server.
+Instead of exposing all tools directly to Claude (consuming ~15,000+ tokens), mcp-proxy exposes just 2 meta-tools:
 
-## Solution
+1. **`get_tools_in_category`** - Navigate a hierarchical tree of available tools
+2. **`execute_tool`** - Execute any tool by its path
 
-This fork adds a `preloadAll` option that starts all configured MCP servers in the background immediately at proxy startup. By the time Claude needs them, they're already warm.
+This progressive disclosure pattern reduces context to ~800 tokens while maintaining full access to all tools.
 
-## Token Savings
+## Features
 
-| Metric | Direct MCP | lazy-mcp | lazy-mcp-preload |
-|--------|------------|----------|------------------|
-| Startup tokens | ~15,000 | ~800 | ~800 |
-| First-call latency | 0ms | ~500ms | ~0ms |
-| Tools visible | 30 | 2 | 2 |
+| Feature | Benefit |
+|---------|---------|
+| **95% context reduction** | ~800 tokens instead of ~15,000 |
+| **Background preloading** | Zero cold-start latency |
+| **Multi-transport** | stdio, SSE, HTTP Streamable |
+| **Graceful degradation** | Failed servers disabled, don't block |
+| **Secrets integration** | Optional OpenBao/Vault support |
+| **Fast-fail detection** | 5s timeout for quick error feedback |
 
-## Installation
-
-### Prerequisites
-
-- Go 1.21+ (`sudo apt install golang-go` or use `./scripts/install-go.sh`)
-- Your existing MCP servers configured and working
-
-### Quick Start
+## Quick Start
 
 ```bash
-# Clone the repository
-git clone https://github.com/iamsamuelrodda/lazy-mcp-preload.git
-cd lazy-mcp-preload
+# Clone and build
+git clone https://github.com/samuelrodda/mcp-proxy.git
+cd mcp-proxy
+./scripts/install.sh
 
-# Build the proxy
-make build
-
-# Generate tool hierarchy from your existing MCP servers
-make generate-hierarchy
-
-# Deploy to ~/.claude/lazy-mcp/
-make deploy
+# Or manually:
+go build -o build/mcp-proxy ./cmd/mcp-proxy
 ```
 
 ## Configuration
 
 ### 1. Create config.json
-
-Copy the example and customize for your MCP servers:
-
-```bash
-cp config/config.json.example config/config.json
-```
-
-Edit `config/config.json`:
 
 ```json
 {
@@ -67,11 +51,10 @@ Edit `config/config.json`:
     }
   },
   "mcpServers": {
-    "your-server-name": {
+    "your-server": {
       "transportType": "stdio",
-      "command": "python",
-      "args": ["/path/to/your/mcp_server.py"],
-      "env": {},
+      "command": "/path/to/.venv/bin/python",
+      "args": ["/path/to/mcp_server.py"],
       "options": { "lazyLoad": true }
     }
   }
@@ -79,17 +62,23 @@ Edit `config/config.json`:
 ```
 
 **Key options:**
-- `lazyLoad: true` - Only load tool schemas on-demand (reduces context)
-- `preloadAll: true` - Pre-warm all servers in background (eliminates cold start)
+- `lazyLoad: true` - Progressive tool disclosure (reduces context)
+- `preloadAll: true` - Pre-warm servers in background (eliminates cold start)
 
-### 2. Update Claude Code Configuration
+### 2. Generate Tool Hierarchy
 
-Add to your `~/.claude.json`:
+```bash
+./build/structure_generator --config config.json --output hierarchy/
+```
+
+### 3. Configure Claude Code
+
+Add to `~/.claude.json`:
 
 ```json
 {
   "mcpServers": {
-    "lazy-mcp": {
+    "mcp-proxy": {
       "type": "stdio",
       "command": "~/.claude/lazy-mcp/mcp-proxy",
       "args": ["--config", "~/.claude/lazy-mcp/config.json"]
@@ -98,21 +87,7 @@ Add to your `~/.claude.json`:
 }
 ```
 
-**Important:** Remove your original MCP server entries from `~/.claude.json` - the proxy handles them now.
-
-## How Preloading Works
-
-```
-0ms      50ms     200ms    500ms    1000ms+
-│        │        │        │        │
-▼        ▼        ▼        ▼        ▼
-[proxy starts]
-         [2 meta-tools ready ─ Claude can start]
-         [───── background preload (parallel) ─────]
-                  [user typing...]
-                           [all servers warm]
-                                    [tool call = instant]
-```
+**Important:** Remove individual MCP server entries - the proxy handles them.
 
 ## Architecture
 
@@ -122,91 +97,75 @@ Add to your `~/.claude.json`:
 │                        │                             │
 │                        ▼                             │
 │         ┌──────────────────────────────┐            │
-│         │     lazy-mcp-preload         │            │
+│         │         mcp-proxy            │            │
 │         │                              │            │
-│         │  Main thread:                │            │
-│         │  • get_tools_in_category()   │ ~800 tokens│
+│         │  2 meta-tools (~800 tokens)  │            │
+│         │  • get_tools_in_category()   │            │
 │         │  • execute_tool()            │            │
 │         │                              │            │
-│         │  Background goroutine:       │            │
-│         │  • Pre-starts all servers    │            │
+│         │  Background: preload all     │            │
 │         └──────────────────────────────┘            │
 │                        │                             │
 │     ┌──────────────────┼──────────────────┐         │
 │     ▼                  ▼                  ▼         │
-│ [Joplin]          [Todoist]        [Nextcloud]      │
-│  warm              warm             warm            │
+│ [Server 1]        [Server 2]        [Server 3]      │
+│   warm              warm              warm          │
 └─────────────────────────────────────────────────────┘
+```
+
+## Secrets Provider (Optional)
+
+For integrating with secrets managers like OpenBao/HashiCorp Vault:
+
+```json
+{
+  "mcpProxy": {
+    "options": {
+      "secretsProvider": "openbao",
+      "secretsAutoStart": true,
+      "secretsProviderAddr": "http://127.0.0.1:8200"
+    }
+  }
+}
+```
+
+Supported providers: `none` (default), `openbao`, `env`
+
+See [config.template.json](config/config.template.json) for all options.
+
+## Project Structure
+
+```
+mcp-proxy/
+├── cmd/mcp-proxy/         # Main entry point
+├── internal/
+│   ├── client/            # MCP client connections
+│   ├── config/            # Configuration parsing
+│   ├── hierarchy/         # Tool schema management
+│   ├── secrets/           # Secrets provider interface
+│   └── server/            # Proxy server logic
+├── structure_generator/   # Hierarchy generation tool
+├── config/                # Example configurations
+└── scripts/               # Build & install scripts
 ```
 
 ## Development
 
-### Project Structure
-
-```
-lazy-mcp-preload/
-├── README.md
-├── Makefile
-├── go.mod / go.sum
-├── cmd/mcp-proxy/         # Main entry point
-├── internal/              # Core implementation
-│   ├── client/            # MCP client connections
-│   ├── config/            # Configuration parsing
-│   ├── hierarchy/         # Tool schema management
-│   └── server/            # Proxy server logic
-├── config/                # Example configurations
-├── scripts/               # Build & deploy scripts
-├── structure_generator/   # Python tool for generating hierarchy
-└── deploy/hierarchy/      # Generated tool schemas
-```
-
-### Making Changes
-
 ```bash
-# Edit source in internal/ or cmd/
-make build                                    # Rebuild
-./build/mcp-proxy --config config/config.json # Test locally
-make deploy                                   # Deploy to ~/.claude/lazy-mcp/
+# Build
+go build ./...
+
+# Test
+go test ./...
+
+# Run locally
+./build/mcp-proxy --config config/config.json
 ```
 
-### Generating Tool Hierarchy
+## Acknowledgments
 
-The hierarchy generator introspects your MCP servers and creates JSON schemas:
-
-```bash
-cd structure_generator
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-python generate_hierarchy.py --config ../config/config.json --output ../deploy/hierarchy
-```
-
-## Upstream
-
-Fork of [voicetreelab/lazy-mcp](https://github.com/voicetreelab/lazy-mcp).
-
-**Changes from upstream:**
-- Added `preloadAll` config option for background server initialization
-- Servers start in parallel goroutines immediately at proxy startup
-- Added deployment scripts and hierarchy generator for Claude Code
-
-## Contributing
-
-Contributions welcome! This project addresses [anthropics/claude-code#3036](https://github.com/anthropics/claude-code/issues/3036).
-
-## Security Notes
-
-### Remote Config
-
-If using `--config https://...` to load config from a URL:
-- Ensure the config server uses valid HTTPS certificates
-- Config files fetched remotely contain the same sensitive data as local configs
-
-### Auth Tokens
-
-When using HTTP server mode with `authTokens`:
-- Generate cryptographically strong tokens: `openssl rand -base64 32`
-- Rotate tokens periodically
+This project was inspired by [voicetreelab/lazy-mcp](https://github.com/voicetreelab/lazy-mcp), which introduced the elegant 2-meta-tool pattern for progressive tool disclosure. mcp-proxy extends this foundation with background preloading, multi-transport support, secrets integration, and production resilience features.
 
 ## License
 
-MIT License (same as upstream)
+MIT License

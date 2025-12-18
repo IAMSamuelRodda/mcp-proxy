@@ -96,7 +96,7 @@ lint:
 
 # Show help
 help:
-	@echo "lazy-mcp-preload Makefile"
+	@echo "mcp-proxy Makefile"
 	@echo ""
 	@echo "Targets:"
 	@echo "  build              Build the mcp-proxy binary"

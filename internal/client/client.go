@@ -11,7 +11,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/x-forge/lazy-mcp-preload/internal/config"
+	"github.com/samuelrodda/mcp-proxy/internal/config"
 	"github.com/mark3labs/mcp-go/client"
 	"github.com/mark3labs/mcp-go/client/transport"
 	"github.com/mark3labs/mcp-go/mcp"

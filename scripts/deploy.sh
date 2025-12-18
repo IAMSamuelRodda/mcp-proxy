@@ -1,5 +1,5 @@
 #!/bin/bash
-# Deploy lazy-mcp-preload to Claude Code
+# Deploy mcp-proxy to Claude Code
 
 set -e
 
@@ -10,7 +10,7 @@ CLAUDE_JSON="/home/samuelrodda/.claude.json"
 
 cd "$PROJECT_DIR"
 
-echo "=== lazy-mcp-preload Deployment ==="
+echo "=== mcp-proxy Deployment ==="
 echo ""
 
 # Build

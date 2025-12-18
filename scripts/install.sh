@@ -1,5 +1,5 @@
 #!/bin/bash
-# lazy-mcp-preload installation script
+# mcp-proxy installation script
 # Portable installation for any user/machine
 
 set -e
@@ -19,7 +19,7 @@ LAZY_MCP_DIR="${LAZY_MCP_DIR:-$HOME/.claude/lazy-mcp}"
 MCP_SERVERS_DIR="${MCP_SERVERS_DIR:-$HOME/.claude/mcp-servers}"
 CLAUDE_JSON="${CLAUDE_JSON:-$HOME/.claude.json}"
 
-echo -e "${GREEN}=== lazy-mcp-preload Installation ===${NC}"
+echo -e "${GREEN}=== mcp-proxy Installation ===${NC}"
 echo ""
 echo "Installation paths:"
 echo "  LAZY_MCP_DIR:    $LAZY_MCP_DIR"

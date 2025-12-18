@@ -29,9 +29,12 @@ coverage.html
 # Logs
 *.log
 
-# Personal configs (use config.json.example as template)
+# Personal configs (use config.template.json as template)
 config/config.json
 config/*.local.json
 .env
 .env.*
 !.env.example
+
+# Project-specific Claude Code workflow docs (internal)
+.claude/

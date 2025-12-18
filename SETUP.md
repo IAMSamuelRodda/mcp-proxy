@@ -1,6 +1,6 @@
-# lazy-mcp-preload Setup Guide
+# mcp-proxy Setup Guide
 
-This guide is designed for Claude Code to follow when helping users set up lazy-mcp-preload with their existing MCP servers.
+This guide is designed for Claude Code to follow when helping users set up mcp-proxy with their existing MCP servers.
 
 ## Investigation Phase
 

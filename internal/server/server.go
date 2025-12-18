@@ -13,10 +13,10 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/x-forge/lazy-mcp-preload/internal/config"
-	"github.com/x-forge/lazy-mcp-preload/internal/hierarchy"
-	"github.com/x-forge/lazy-mcp-preload/internal/secrets"
-	"github.com/x-forge/lazy-mcp-preload/internal/secrets/openbao"
+	"github.com/samuelrodda/mcp-proxy/internal/config"
+	"github.com/samuelrodda/mcp-proxy/internal/hierarchy"
+	"github.com/samuelrodda/mcp-proxy/internal/secrets"
+	"github.com/samuelrodda/mcp-proxy/internal/secrets/openbao"
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
 )

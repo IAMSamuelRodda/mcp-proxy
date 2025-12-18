@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/x-forge/lazy-mcp-preload/internal/secrets"
+	"github.com/samuelrodda/mcp-proxy/internal/secrets"
 )
 
 // Provider implements secrets.Provider for OpenBao/Vault

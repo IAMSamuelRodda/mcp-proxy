@@ -1,5 +1,5 @@
 #!/bin/bash
-# Install Go 1.21+ for building lazy-mcp-preload
+# Install Go 1.21+ for building mcp-proxy
 
 set -e
 

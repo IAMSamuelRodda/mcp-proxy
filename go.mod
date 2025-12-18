@@ -1,4 +1,4 @@
-module github.com/x-forge/lazy-mcp-preload
+module github.com/samuelrodda/mcp-proxy
 
 go 1.24.0
 
