@@ -168,6 +168,8 @@ func ParseErrorFromStderr(stderr string) (ErrorCode, string) {
 	patterns := map[string]ErrorCode{
 		"agent not running":     ErrProviderNotRunning,
 		"connection refused":    ErrProviderNotRunning,
+		"openbao":               ErrProviderNotRunning,
+		"vault":                 ErrProviderNotRunning,
 		"secret not found":      ErrSecretNotFound,
 		"permission denied":     ErrSecretPermissionDenied,
 		"invalid token":         ErrSecretInvalidToken,
@@ -182,7 +184,9 @@ func ParseErrorFromStderr(stderr string) (ErrorCode, string) {
 		}
 	}
 
-	return ErrProviderNotRunning, stderr
+	// Return generic startup error for unrecognized errors
+	// Don't blame secrets provider unless the error clearly indicates it
+	return ErrorCode("SERVER_STARTUP_FAILED"), stderr
 }
 
 // containsIgnoreCase checks if s contains substr (case-insensitive)
