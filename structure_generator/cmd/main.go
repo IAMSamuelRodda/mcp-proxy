@@ -194,7 +194,7 @@ func fetchToolsFromServer(ctx context.Context, name string, config ServerConfig)
 		return fetchToolsFromStdioServer(ctx, name, config)
 	case "sse":
 		return fetchToolsFromSSEServer(ctx, name, config)
-	case "http":
+	case "http", "streamable-http":
 		return fetchToolsFromHTTPServer(ctx, name, config)
 	default:
 		return generator.ServerTools{}, fmt.Errorf("unsupported transport type: %s", transportType)
