@@ -1,5 +1,8 @@
 # mcp-proxy
 
+[![GitHub release](https://img.shields.io/github/v/release/IAMSamuelRodda/mcp-proxy)](https://github.com/IAMSamuelRodda/mcp-proxy/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
 An aggregating MCP proxy that reduces context window usage by ~95% while providing zero-latency tool execution.
 
 ## How It Works
