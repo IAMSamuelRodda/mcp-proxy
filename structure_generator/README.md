@@ -309,7 +309,7 @@ Real MCP tool data in `tests/test_data/`:
 ### Programmatic Usage
 
 ```go
-import generator "github.com/voicetreelab/lazy-mcp/structure_generator"
+import generator "github.com/IAMSamuelRodda/mcp-proxy/structure_generator"
 
 // Load tool data
 servers := []generator.ServerTools{
@@ -399,10 +399,3 @@ go run cmd/main.go -regenerate-root -output ./my_tools
 # Result: echo now appears in github.json categories
 ```
 
-## Next Steps
-
-- [x] ~~Implement tool grouping~~ **DONE!** Use `-regenerate-root`
-- [x] ~~Support unlimited nesting depth~~ **DONE!**
-- [ ] Add LLM-generated overviews for new groups
-- [ ] Support fetching via MCP proxy HTTP endpoint
-- [ ] Better error handling for stdio connection issues

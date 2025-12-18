@@ -23,6 +23,7 @@ upstream-reference/
 
 # Test output
 *.test
+*.skip
 coverage.out
 coverage.html
 
