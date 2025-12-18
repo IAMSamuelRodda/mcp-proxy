@@ -59,7 +59,7 @@ Create `config/config.json` based on discovered servers:
     "name": "MCP Proxy",
     "version": "1.0.0",
     "type": "stdio",
-    "hierarchyPath": "~/.claude/lazy-mcp/hierarchy",
+    "hierarchyPath": "~/.claude/mcp-proxy/hierarchy",
     "options": {
       "lazyLoad": true,
       "preloadAll": true
@@ -119,15 +119,15 @@ make deploy-full
 
 ### Step 7: Update Claude Config
 
-Replace individual MCP servers in `~/.claude.json` with single lazy-mcp entry:
+Replace individual MCP servers in `~/.claude.json` with single mcp-proxy entry:
 
 ```json
 {
   "mcpServers": {
-    "lazy-mcp": {
+    "mcp-proxy": {
       "type": "stdio",
-      "command": "~/.claude/lazy-mcp/mcp-proxy",
-      "args": ["--config", "~/.claude/lazy-mcp/config.json"]
+      "command": "~/.claude/mcp-proxy/mcp-proxy",
+      "args": ["--config", "~/.claude/mcp-proxy/config.json"]
     }
   }
 }
@@ -137,7 +137,7 @@ Replace individual MCP servers in `~/.claude.json` with single lazy-mcp entry:
 
 ```bash
 # Test proxy starts and loads hierarchy
-timeout 5 ~/.claude/lazy-mcp/mcp-proxy --config ~/.claude/lazy-mcp/config.json
+timeout 5 ~/.claude/mcp-proxy/mcp-proxy --config ~/.claude/mcp-proxy/config.json
 ```
 
 Expected output:
@@ -165,7 +165,7 @@ cat ~/.claude/mcp-servers/<server>/.env.example
 
 The structure generator only supports stdio transport. For SSE/remote servers:
 1. Create hierarchy JSON manually
-2. Or skip and let lazy-mcp handle it without hierarchy metadata
+2. Or skip and let mcp-proxy handle it without hierarchy metadata
 
 ## Migration Checklist
 
@@ -174,6 +174,6 @@ The structure generator only supports stdio transport. For SSE/remote servers:
 - [ ] Generated hierarchy for stdio servers
 - [ ] Added manual hierarchy for SSE/remote servers
 - [ ] Deployed binary and hierarchy
-- [ ] Updated ~/.claude.json to use lazy-mcp
+- [ ] Updated ~/.claude.json to use mcp-proxy
 - [ ] Verified proxy starts correctly
 - [ ] Tested tool execution through proxy

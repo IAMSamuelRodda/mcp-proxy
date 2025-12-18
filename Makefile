@@ -6,7 +6,7 @@ BINARY := mcp-proxy
 STRUCTURE_GEN := structure_generator
 
 # Default deployment paths (can be overridden)
-LAZY_MCP_DIR ?= $(HOME)/.claude/lazy-mcp
+MCP_PROXY_DIR ?= $(HOME)/.claude/mcp-proxy
 MCP_SERVERS_DIR ?= $(HOME)/.claude/mcp-servers
 CONFIG_FILE ?= config/config.local.json
 
@@ -42,27 +42,27 @@ install: build
 
 # Deploy only the binary (safe - doesn't touch config or hierarchy)
 deploy: build
-	@echo "Deploying binary to $(LAZY_MCP_DIR)..."
-	@mkdir -p $(LAZY_MCP_DIR)
-	cp $(BUILD_DIR)/$(BINARY) $(LAZY_MCP_DIR)/
-	cp $(BUILD_DIR)/$(STRUCTURE_GEN) $(LAZY_MCP_DIR)/
-	chmod +x $(LAZY_MCP_DIR)/$(BINARY)
-	chmod +x $(LAZY_MCP_DIR)/$(STRUCTURE_GEN)
+	@echo "Deploying binary to $(MCP_PROXY_DIR)..."
+	@mkdir -p $(MCP_PROXY_DIR)
+	cp $(BUILD_DIR)/$(BINARY) $(MCP_PROXY_DIR)/
+	cp $(BUILD_DIR)/$(STRUCTURE_GEN) $(MCP_PROXY_DIR)/
+	chmod +x $(MCP_PROXY_DIR)/$(BINARY)
+	chmod +x $(MCP_PROXY_DIR)/$(STRUCTURE_GEN)
 	@echo "Binary deployed. Config and hierarchy unchanged."
 
 # Generate hierarchy from config
 generate-hierarchy: build
-	@echo "Generating tool hierarchy to $(LAZY_MCP_DIR)/hierarchy..."
-	@mkdir -p $(LAZY_MCP_DIR)/hierarchy
-	@if [ -f $(LAZY_MCP_DIR)/config.json ]; then \
-		./$(BUILD_DIR)/$(STRUCTURE_GEN) --config $(LAZY_MCP_DIR)/config.json --output $(LAZY_MCP_DIR)/hierarchy; \
+	@echo "Generating tool hierarchy to $(MCP_PROXY_DIR)/hierarchy..."
+	@mkdir -p $(MCP_PROXY_DIR)/hierarchy
+	@if [ -f $(MCP_PROXY_DIR)/config.json ]; then \
+		./$(BUILD_DIR)/$(STRUCTURE_GEN) --config $(MCP_PROXY_DIR)/config.json --output $(MCP_PROXY_DIR)/hierarchy; \
 	elif [ -f $(CONFIG_FILE) ]; then \
-		./$(BUILD_DIR)/$(STRUCTURE_GEN) --config $(CONFIG_FILE) --output $(LAZY_MCP_DIR)/hierarchy; \
+		./$(BUILD_DIR)/$(STRUCTURE_GEN) --config $(CONFIG_FILE) --output $(MCP_PROXY_DIR)/hierarchy; \
 	else \
-		echo "No config file found. Create $(LAZY_MCP_DIR)/config.json or $(CONFIG_FILE)"; \
+		echo "No config file found. Create $(MCP_PROXY_DIR)/config.json or $(CONFIG_FILE)"; \
 		exit 1; \
 	fi
-	@echo "Hierarchy generated at $(LAZY_MCP_DIR)/hierarchy/"
+	@echo "Hierarchy generated at $(MCP_PROXY_DIR)/hierarchy/"
 
 # Full deploy: binary + config + regenerate hierarchy
 deploy-full: deploy generate-hierarchy
@@ -70,10 +70,10 @@ deploy-full: deploy generate-hierarchy
 	@echo ""
 	@echo "Add to ~/.claude.json if not already present:"
 	@echo '  "mcpServers": {'
-	@echo '    "lazy-mcp": {'
+	@echo '    "mcp-proxy": {'
 	@echo '      "type": "stdio",'
-	@echo '      "command": "$(LAZY_MCP_DIR)/$(BINARY)",'
-	@echo '      "args": ["--config", "$(LAZY_MCP_DIR)/config.json"]'
+	@echo '      "command": "$(MCP_PROXY_DIR)/$(BINARY)",'
+	@echo '      "args": ["--config", "$(MCP_PROXY_DIR)/config.json"]'
 	@echo '    }'
 	@echo '  }'
 
@@ -110,11 +110,11 @@ help:
 	@echo "  lint               Run linter"
 	@echo ""
 	@echo "Variables (can be overridden):"
-	@echo "  LAZY_MCP_DIR       Install directory (default: ~/.claude/lazy-mcp)"
+	@echo "  MCP_PROXY_DIR       Install directory (default: ~/.claude/mcp-proxy)"
 	@echo "  MCP_SERVERS_DIR    MCP servers directory (default: ~/.claude/mcp-servers)"
 	@echo "  CONFIG_FILE        Config file to use (default: config/config.local.json)"
 	@echo ""
 	@echo "Examples:"
 	@echo "  make install"
-	@echo "  make deploy LAZY_MCP_DIR=/custom/path"
+	@echo "  make deploy MCP_PROXY_DIR=/custom/path"
 	@echo "  make generate-hierarchy"

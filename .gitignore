@@ -17,7 +17,7 @@ vendor/
 Thumbs.db
 
 # Upstream reference (not needed in distribution)
-upstream-lazy-mcp/
+upstream-reference/
 
 # Deploy folder no longer used - hierarchy generates directly to install location
 

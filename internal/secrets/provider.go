@@ -1,6 +1,6 @@
 // Package secrets provides a pluggable secrets provider interface for MCP servers.
 //
-// This allows lazy-mcp to integrate with various secrets backends (OpenBao, HashiCorp Vault,
+// This allows mcp-proxy to integrate with various secrets backends (OpenBao, HashiCorp Vault,
 // AWS Secrets Manager, etc.) while maintaining graceful degradation when secrets are unavailable.
 package secrets
 

@@ -15,14 +15,14 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 
 # Default installation paths (can be overridden)
-LAZY_MCP_DIR="${LAZY_MCP_DIR:-$HOME/.claude/lazy-mcp}"
+MCP_PROXY_DIR="${MCP_PROXY_DIR:-$HOME/.claude/mcp-proxy}"
 MCP_SERVERS_DIR="${MCP_SERVERS_DIR:-$HOME/.claude/mcp-servers}"
 CLAUDE_JSON="${CLAUDE_JSON:-$HOME/.claude.json}"
 
 echo -e "${GREEN}=== mcp-proxy Installation ===${NC}"
 echo ""
 echo "Installation paths:"
-echo "  LAZY_MCP_DIR:    $LAZY_MCP_DIR"
+echo "  MCP_PROXY_DIR:    $MCP_PROXY_DIR"
 echo "  MCP_SERVERS_DIR: $MCP_SERVERS_DIR"
 echo "  CLAUDE_JSON:     $CLAUDE_JSON"
 echo ""
@@ -57,8 +57,8 @@ setup_directories() {
     echo ""
     echo "[2/5] Setting up directories..."
 
-    mkdir -p "$LAZY_MCP_DIR"
-    mkdir -p "$LAZY_MCP_DIR/hierarchy"
+    mkdir -p "$MCP_PROXY_DIR"
+    mkdir -p "$MCP_PROXY_DIR/hierarchy"
     mkdir -p "$MCP_SERVERS_DIR"
 
     echo -e "${GREEN}[OK]${NC} Directories created"
@@ -69,12 +69,12 @@ install_binary() {
     echo ""
     echo "[3/5] Installing binary..."
 
-    cp "$PROJECT_DIR/build/mcp-proxy" "$LAZY_MCP_DIR/"
-    cp "$PROJECT_DIR/build/structure_generator" "$LAZY_MCP_DIR/"
-    chmod +x "$LAZY_MCP_DIR/mcp-proxy"
-    chmod +x "$LAZY_MCP_DIR/structure_generator"
+    cp "$PROJECT_DIR/build/mcp-proxy" "$MCP_PROXY_DIR/"
+    cp "$PROJECT_DIR/build/structure_generator" "$MCP_PROXY_DIR/"
+    chmod +x "$MCP_PROXY_DIR/mcp-proxy"
+    chmod +x "$MCP_PROXY_DIR/structure_generator"
 
-    echo -e "${GREEN}[OK]${NC} Binary installed to $LAZY_MCP_DIR/mcp-proxy"
+    echo -e "${GREEN}[OK]${NC} Binary installed to $MCP_PROXY_DIR/mcp-proxy"
 }
 
 # Generate config from template
@@ -82,7 +82,7 @@ generate_config() {
     echo ""
     echo "[4/5] Generating configuration..."
 
-    CONFIG_FILE="$LAZY_MCP_DIR/config.json"
+    CONFIG_FILE="$MCP_PROXY_DIR/config.json"
 
     if [ -f "$CONFIG_FILE" ]; then
         echo -e "${YELLOW}[WARN]${NC} Config file already exists: $CONFIG_FILE"
@@ -95,17 +95,17 @@ generate_config() {
     if [ -f "$PROJECT_DIR/config/config.local.json" ]; then
         echo "Using custom config: config/config.local.json"
         # Expand environment variables in the template
-        export LAZY_MCP_DIR MCP_SERVERS_DIR
+        export MCP_PROXY_DIR MCP_SERVERS_DIR
         envsubst < "$PROJECT_DIR/config/config.local.json" > "$CONFIG_FILE"
     else
         # Create minimal default config
         cat > "$CONFIG_FILE" << EOF
 {
   "mcpProxy": {
-    "name": "lazy-mcp Proxy",
+    "name": "MCP Proxy",
     "version": "1.0.0",
     "type": "stdio",
-    "hierarchyPath": "$LAZY_MCP_DIR/hierarchy",
+    "hierarchyPath": "$MCP_PROXY_DIR/hierarchy",
     "options": {
       "logEnabled": true,
       "lazyLoad": true,
@@ -133,10 +133,10 @@ update_claude_config() {
         echo ""
         echo "Add this to your ~/.claude.json mcpServers:"
         echo ""
-        echo "  \"lazy-mcp\": {"
+        echo "  \"mcp-proxy\": {"
         echo "    \"type\": \"stdio\","
-        echo "    \"command\": \"$LAZY_MCP_DIR/mcp-proxy\","
-        echo "    \"args\": [\"--config\", \"$LAZY_MCP_DIR/config.json\"]"
+        echo "    \"command\": \"$MCP_PROXY_DIR/mcp-proxy\","
+        echo "    \"args\": [\"--config\", \"$MCP_PROXY_DIR/config.json\"]"
         echo "  }"
         return 0
     fi
@@ -146,20 +146,20 @@ update_claude_config() {
     cp "$CLAUDE_JSON" "$BACKUP"
     echo "Backed up config to: $BACKUP"
 
-    # Check if lazy-mcp entry already exists
-    if grep -q '"lazy-mcp"' "$CLAUDE_JSON"; then
-        echo -e "${YELLOW}[WARN]${NC} lazy-mcp entry already exists in $CLAUDE_JSON"
+    # Check if mcp-proxy entry already exists
+    if grep -q '"mcp-proxy"' "$CLAUDE_JSON"; then
+        echo -e "${YELLOW}[WARN]${NC} mcp-proxy entry already exists in $CLAUDE_JSON"
         echo "       Please verify the configuration manually."
         return 0
     fi
 
-    # Add lazy-mcp using Python (handles JSON properly)
+    # Add mcp-proxy using Python (handles JSON properly)
     python3 << PYTHON_SCRIPT
 import json
 import sys
 
 config_path = "$CLAUDE_JSON"
-lazy_mcp_dir = "$LAZY_MCP_DIR"
+lazy_mcp_dir = "$MCP_PROXY_DIR"
 
 try:
     with open(config_path, 'r') as f:
@@ -172,8 +172,8 @@ except json.JSONDecodeError as e:
 if 'mcpServers' not in config:
     config['mcpServers'] = {}
 
-# Add lazy-mcp proxy
-config['mcpServers']['lazy-mcp'] = {
+# Add mcp-proxy
+config['mcpServers']['mcp-proxy'] = {
     "type": "stdio",
     "command": f"{lazy_mcp_dir}/mcp-proxy",
     "args": ["--config", f"{lazy_mcp_dir}/config.json"]
@@ -182,7 +182,7 @@ config['mcpServers']['lazy-mcp'] = {
 with open(config_path, 'w') as f:
     json.dump(config, f, indent=2)
 
-print("Updated ~/.claude.json with lazy-mcp proxy")
+print("Updated ~/.claude.json with mcp-proxy")
 PYTHON_SCRIPT
 
     echo -e "${GREEN}[OK]${NC} Claude Code configuration updated"
@@ -201,26 +201,26 @@ main() {
     echo -e "${GREEN}=== Installation Complete ===${NC}"
     echo ""
     echo "Installed files:"
-    echo "  $LAZY_MCP_DIR/mcp-proxy"
-    echo "  $LAZY_MCP_DIR/config.json"
-    echo "  $LAZY_MCP_DIR/hierarchy/"
+    echo "  $MCP_PROXY_DIR/mcp-proxy"
+    echo "  $MCP_PROXY_DIR/config.json"
+    echo "  $MCP_PROXY_DIR/hierarchy/"
     echo ""
     echo "Next steps:"
-    echo "  1. Add MCP servers to $LAZY_MCP_DIR/config.json"
-    echo "  2. Generate hierarchy: $LAZY_MCP_DIR/structure_generator --config $LAZY_MCP_DIR/config.json --output $LAZY_MCP_DIR/hierarchy"
+    echo "  1. Add MCP servers to $MCP_PROXY_DIR/config.json"
+    echo "  2. Generate hierarchy: $MCP_PROXY_DIR/structure_generator --config $MCP_PROXY_DIR/config.json --output $MCP_PROXY_DIR/hierarchy"
     echo "  3. Restart Claude Code"
     echo ""
     echo "To test: claude mcp list"
     echo "To view logs: The proxy logs to stderr (visible in Claude Code logs)"
     echo ""
-    echo "To uninstall: rm -rf $LAZY_MCP_DIR"
+    echo "To uninstall: rm -rf $MCP_PROXY_DIR"
 }
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
     case $1 in
-        --lazy-mcp-dir)
-            LAZY_MCP_DIR="$2"
+        --mcp-proxy-dir)
+            MCP_PROXY_DIR="$2"
             shift 2
             ;;
         --mcp-servers-dir)
@@ -235,7 +235,7 @@ while [[ $# -gt 0 ]]; do
             echo "Usage: $0 [OPTIONS]"
             echo ""
             echo "Options:"
-            echo "  --lazy-mcp-dir DIR     Installation directory (default: ~/.claude/lazy-mcp)"
+            echo "  --mcp-proxy-dir DIR     Installation directory (default: ~/.claude/mcp-proxy)"
             echo "  --mcp-servers-dir DIR  MCP servers directory (default: ~/.claude/mcp-servers)"
             echo "  --claude-json FILE     Claude config file (default: ~/.claude.json)"
             echo "  -h, --help             Show this help"

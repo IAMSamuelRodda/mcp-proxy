@@ -1,9 +1,9 @@
 {
   "mcpProxy": {
-    "name": "lazy-mcp Proxy",
+    "name": "MCP Proxy",
     "version": "1.0.0",
     "type": "stdio",
-    "hierarchyPath": "${LAZY_MCP_DIR}/hierarchy",
+    "hierarchyPath": "${MCP_PROXY_DIR}/hierarchy",
     "options": {
       "logEnabled": true,
       "lazyLoad": true,

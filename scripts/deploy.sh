@@ -5,7 +5,7 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
-DEPLOY_DIR="/home/samuelrodda/.claude/lazy-mcp"
+DEPLOY_DIR="/home/samuelrodda/.claude/mcp-proxy"
 CLAUDE_JSON="/home/samuelrodda/.claude.json"
 
 cd "$PROJECT_DIR"
@@ -38,12 +38,12 @@ if [ -f "$CLAUDE_JSON" ]; then
     # Backup existing config
     cp "$CLAUDE_JSON" "${CLAUDE_JSON}.backup.$(date +%Y%m%d_%H%M%S)"
 
-    # Check if lazy-mcp entry already exists
-    if grep -q '"lazy-mcp"' "$CLAUDE_JSON"; then
-        echo "lazy-mcp entry already exists in ${CLAUDE_JSON}"
+    # Check if mcp-proxy entry already exists
+    if grep -q '"mcp-proxy"' "$CLAUDE_JSON"; then
+        echo "mcp-proxy entry already exists in ${CLAUDE_JSON}"
         echo "Please verify the configuration manually."
     else
-        # Add lazy-mcp to mcpServers using Python
+        # Add mcp-proxy to mcpServers using Python
         python3 << 'PYTHON_SCRIPT'
 import json
 import sys
@@ -64,22 +64,22 @@ for server in servers_to_remove:
         print(f"Removing direct server: {server}")
         del config['mcpServers'][server]
 
-# Add lazy-mcp proxy
-config['mcpServers']['lazy-mcp'] = {
+# Add mcp-proxy
+config['mcpServers']['mcp-proxy'] = {
     "type": "stdio",
-    "command": "/home/samuelrodda/.claude/lazy-mcp/mcp-proxy",
-    "args": ["--config", "/home/samuelrodda/.claude/lazy-mcp/config.json"]
+    "command": "/home/samuelrodda/.claude/mcp-proxy/mcp-proxy",
+    "args": ["--config", "/home/samuelrodda/.claude/mcp-proxy/config.json"]
 }
 
 with open(config_path, 'w') as f:
     json.dump(config, f, indent=2)
 
-print("Updated ~/.claude.json with lazy-mcp proxy")
+print("Updated ~/.claude.json with mcp-proxy")
 PYTHON_SCRIPT
     fi
 else
     echo "Warning: ${CLAUDE_JSON} not found"
-    echo "Create it manually with the lazy-mcp configuration"
+    echo "Create it manually with the mcp-proxy configuration"
 fi
 
 echo ""

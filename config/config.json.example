@@ -3,7 +3,7 @@
     "name": "MCP Proxy",
     "version": "1.0.0",
     "type": "stdio",
-    "hierarchyPath": "~/.claude/lazy-mcp/hierarchy",
+    "hierarchyPath": "~/.claude/mcp-proxy/hierarchy",
     "options": {
       "lazyLoad": true,
       "preloadAll": true

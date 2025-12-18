@@ -44,7 +44,7 @@ go build -o build/mcp-proxy ./cmd/mcp-proxy
     "name": "MCP Proxy",
     "version": "1.0.0",
     "type": "stdio",
-    "hierarchyPath": "~/.claude/lazy-mcp/hierarchy",
+    "hierarchyPath": "~/.claude/mcp-proxy/hierarchy",
     "options": {
       "lazyLoad": true,
       "preloadAll": true
@@ -80,8 +80,8 @@ Add to `~/.claude.json`:
   "mcpServers": {
     "mcp-proxy": {
       "type": "stdio",
-      "command": "~/.claude/lazy-mcp/mcp-proxy",
-      "args": ["--config", "~/.claude/lazy-mcp/config.json"]
+      "command": "~/.claude/mcp-proxy/mcp-proxy",
+      "args": ["--config", "~/.claude/mcp-proxy/config.json"]
     }
   }
 }
