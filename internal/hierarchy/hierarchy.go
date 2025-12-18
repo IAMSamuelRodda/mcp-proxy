@@ -400,21 +400,30 @@ func (h *Hierarchy) ResolveToolPath(toolPath string) (*ToolDefinition, string, e
 
 // HandleExecuteTool handles the execute_tool meta-tool
 func (h *Hierarchy) HandleExecuteTool(ctx context.Context, registry *ServerRegistry, toolPath string, arguments map[string]interface{}) (*mcp.CallToolResult, error) {
+	start := time.Now()
+
 	// Resolve the tool path to get tool definition and server name
 	toolDef, serverName, err := h.ResolveToolPath(toolPath)
 	if err != nil {
+		log.Printf("Tool resolution failed for %s: %v", toolPath, err)
 		return nil, err
 	}
 
 	if serverName == "" {
+		log.Printf("No MCP server configured for tool: %s", toolPath)
 		return nil, fmt.Errorf("no MCP server configured for tool: %s", toolPath)
 	}
 
+	log.Printf("Resolved tool: path=%s, server=%s, maps_to=%s", toolPath, serverName, toolDef.MapsTo)
+
 	// Get or load the MCP client for this server
+	loadStart := time.Now()
 	client, err := registry.GetOrLoadServer(ctx, serverName)
 	if err != nil {
+		log.Printf("Failed to get MCP client for %s after %v: %v", serverName, time.Since(loadStart), err)
 		return nil, fmt.Errorf("failed to get MCP client: %w", err)
 	}
+	log.Printf("Got MCP client for %s in %v", serverName, time.Since(loadStart))
 
 	// Use the mapped tool name
 	actualToolName := toolDef.MapsTo
@@ -428,19 +437,23 @@ func (h *Hierarchy) HandleExecuteTool(ctx context.Context, registry *ServerRegis
 
 	log.Printf("Executing tool: hierarchy_path=%s, server=%s, tool=%s", toolPath, serverName, actualToolName)
 
-	// Create a context with 15-second timeout for tool execution
-	toolCtx, cancel := context.WithTimeout(ctx, 15*time.Second)
+	// Create a context with 60-second timeout for tool execution (increased from 15s)
+	toolCtx, cancel := context.WithTimeout(ctx, 60*time.Second)
 	defer cancel()
 
 	// Call the tool on the actual MCP server
+	callStart := time.Now()
 	callRequest := mcp.CallToolRequest{}
 	callRequest.Params.Name = actualToolName
 	callRequest.Params.Arguments = wrappedArguments
 
 	result, err := client.GetClient().CallTool(toolCtx, callRequest)
 	if err != nil {
+		log.Printf("Tool call failed for %s after %v: %v", actualToolName, time.Since(callStart), err)
 		return nil, fmt.Errorf("failed to call tool %s: %w", actualToolName, err)
 	}
+
+	log.Printf("Tool %s completed in %v (total: %v)", actualToolName, time.Since(callStart), time.Since(start))
 
 	return result, nil
 }
@@ -546,32 +559,42 @@ func (r *ServerRegistry) GetOrLoadServer(ctx context.Context, serverName string)
 		return nil, fmt.Errorf("server config not found: %s", serverName)
 	}
 
+	// Create a context with 30-second timeout for server initialization
+	// This prevents hanging indefinitely if a server is unresponsive
+	initCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
+	defer cancel()
+
+	start := time.Now()
+	log.Printf("Loading MCP server: %s", serverName)
+
 	// Create the MCP client
 	mcpClient, err := client.NewMCPClient(serverName, cfg)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create MCP client: %w", err)
+		return nil, fmt.Errorf("failed to create MCP client for %s: %w", serverName, err)
 	}
 
 	// Start the client if needed
 	if mcpClient.NeedManualStart() {
-		err := mcpClient.GetClient().Start(ctx)
+		log.Printf("Starting MCP client: %s", serverName)
+		err := mcpClient.GetClient().Start(initCtx)
 		if err != nil {
-			return nil, fmt.Errorf("failed to start MCP client: %w", err)
+			return nil, fmt.Errorf("failed to start MCP client %s: %w", serverName, err)
 		}
 	}
 
 	// Initialize the client
+	log.Printf("Initializing MCP client: %s", serverName)
 	initRequest := mcp.InitializeRequest{}
 	initRequest.Params.ProtocolVersion = mcp.LATEST_PROTOCOL_VERSION
 	initRequest.Params.ClientInfo = mcp.Implementation{Name: "mcp-proxy-recursive"}
 	initRequest.Params.Capabilities = mcp.ClientCapabilities{}
 
-	_, err = mcpClient.GetClient().Initialize(ctx, initRequest)
+	_, err = mcpClient.GetClient().Initialize(initCtx, initRequest)
 	if err != nil {
-		return nil, fmt.Errorf("failed to initialize MCP client: %w", err)
+		return nil, fmt.Errorf("failed to initialize MCP client %s: %w", serverName, err)
 	}
 
-	log.Printf("Created and initialized MCP client for server: %s", serverName)
+	log.Printf("Created and initialized MCP client for server: %s (took %v)", serverName, time.Since(start))
 
 	// Store the client
 	r.clients[serverName] = mcpClient

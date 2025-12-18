@@ -1,0 +1,22 @@
+{
+  "mcpProxy": {
+    "name": "lazy-mcp Proxy",
+    "version": "1.0.0",
+    "type": "stdio",
+    "hierarchyPath": "${LAZY_MCP_DIR}/hierarchy",
+    "options": {
+      "logEnabled": true,
+      "lazyLoad": true,
+      "preloadAll": true
+    }
+  },
+  "mcpServers": {
+    "example-server": {
+      "transportType": "stdio",
+      "command": "${MCP_SERVERS_DIR}/example/.venv/bin/python",
+      "args": ["${MCP_SERVERS_DIR}/example/server.py"],
+      "env": {},
+      "options": { "lazyLoad": true }
+    }
+  }
+}
