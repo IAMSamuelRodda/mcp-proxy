@@ -349,9 +349,12 @@ install_mcp_proxy() {
 
     log_info "Deploying binaries..."
     mkdir -p "$MCP_PROXY_DIR"
-    cp build/mcp-proxy "$MCP_PROXY_DIR/"
-    cp build/structure_generator "$MCP_PROXY_DIR/"
-    chmod +x "$MCP_PROXY_DIR/mcp-proxy" "$MCP_PROXY_DIR/structure_generator"
+    # Atomic replacement to avoid "Text file busy" when binary is running
+    cp build/mcp-proxy "$MCP_PROXY_DIR/mcp-proxy.new"
+    cp build/structure_generator "$MCP_PROXY_DIR/structure_generator.new"
+    chmod +x "$MCP_PROXY_DIR/mcp-proxy.new" "$MCP_PROXY_DIR/structure_generator.new"
+    mv -f "$MCP_PROXY_DIR/mcp-proxy.new" "$MCP_PROXY_DIR/mcp-proxy"
+    mv -f "$MCP_PROXY_DIR/structure_generator.new" "$MCP_PROXY_DIR/structure_generator"
 
     log_info "Expanding and copying configuration..."
     export MCP_SERVERS_DIR MCP_PROXY_DIR HOME
