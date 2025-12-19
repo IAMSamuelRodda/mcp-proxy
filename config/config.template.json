@@ -14,8 +14,9 @@
       "lazyLoad": true,
       "preloadAll": true,
 
-      "_comment_secrets": "Secrets provider configuration (optional)",
-      "_comment_secrets_providers": "Supported: 'none' (default), 'openbao', 'env'",
+      "_comment_secrets": "Secrets provider: 'none' (default), 'openbao', 'env'",
+      "_comment_secrets_simple": "For simple mode, use 'none' and configure envFile per server",
+      "_comment_secrets_secure": "For secure mode, use 'openbao' with --secure bootstrap flag",
       "secretsProvider": "none",
       "secretsAutoStart": false,
       "secretsAutoStartCmd": "",
@@ -27,16 +28,33 @@
   "mcpServers": {
     "_comment": "Each server needs a 'source' field for installation by bootstrap.sh",
 
-    "example-git": {
-      "_comment": "Server installed from GitHub",
+    "example-with-env-file": {
+      "_comment": "Simple mode: Load secrets from .env file",
       "source": {
         "type": "git",
         "url": "https://github.com/user/mcp-server.git"
       },
       "transportType": "stdio",
-      "command": "${MCP_SERVERS_DIR}/example-git/.venv/bin/python",
-      "args": ["${MCP_SERVERS_DIR}/example-git/server.py"],
+      "command": "${MCP_SERVERS_DIR}/example-with-env-file/.venv/bin/python",
+      "args": ["${MCP_SERVERS_DIR}/example-with-env-file/server.py"],
+      "envFile": "${MCP_SERVERS_DIR}/example-with-env-file/.env",
       "env": {},
+      "options": { "lazyLoad": true }
+    },
+
+    "example-with-inline-env": {
+      "_comment": "Simple mode: Inline environment variables (less secure, visible in config)",
+      "source": {
+        "type": "git",
+        "url": "https://github.com/user/mcp-server.git"
+      },
+      "transportType": "stdio",
+      "command": "${MCP_SERVERS_DIR}/example-with-inline-env/.venv/bin/python",
+      "args": ["${MCP_SERVERS_DIR}/example-with-inline-env/server.py"],
+      "env": {
+        "API_KEY": "your-api-key-here",
+        "API_URL": "https://api.example.com"
+      },
       "options": { "lazyLoad": true }
     },
 
@@ -49,6 +67,7 @@
       "transportType": "stdio",
       "command": "${MCP_SERVERS_DIR}/example-local/.venv/bin/python",
       "args": ["${MCP_SERVERS_DIR}/example-local/server.py"],
+      "envFile": "${MCP_SERVERS_DIR}/example-local/.env",
       "env": {},
       "options": { "lazyLoad": true }
     },
@@ -62,6 +81,7 @@
       "transportType": "stdio",
       "command": "${MCP_SERVERS_DIR}/example-module/.venv/bin/python",
       "args": ["-m", "mcp_server.server"],
+      "envFile": "${MCP_SERVERS_DIR}/example-module/.env",
       "env": {
         "PYTHONPATH": "${MCP_SERVERS_DIR}/example-module"
       },

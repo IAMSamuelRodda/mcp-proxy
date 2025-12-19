@@ -47,6 +47,12 @@ CONFIG_FILE="$PROJECT_DIR/config/config.local.json"
 FORCE_REINSTALL=false
 SECURE_MODE=false
 
+# Step labels (set dynamically based on mode)
+STEP_MCP_SERVERS=""
+STEP_MCP_PROXY=""
+STEP_BITWARDEN=""
+STEP_OPENBAO=""
+
 # Track results
 INSTALLED=()
 UPDATED=()
@@ -229,7 +235,7 @@ install_mcp_server() {
 
 # Parse config and install all MCP servers with source definitions
 install_mcp_servers() {
-    log_section "Step 3/4: MCP servers"
+    log_section "$STEP_MCP_SERVERS: MCP servers"
 
     if [ ! -f "$CONFIG_FILE" ]; then
         log_error "Config file not found: $CONFIG_FILE"
@@ -262,9 +268,9 @@ install_mcp_servers() {
     done
 }
 
-# Step 1: bitwarden-guard
+# bitwarden-guard (secure mode only)
 install_bitwarden_guard() {
-    log_section "Step 1/4: bitwarden-guard"
+    log_section "$STEP_BITWARDEN: bitwarden-guard"
 
     if command -v bitwarden-guard &>/dev/null; then
         log_info "bitwarden-guard already installed"
@@ -294,9 +300,9 @@ install_bitwarden_guard() {
     fi
 }
 
-# Step 2: openbao-agents
+# openbao-agents (secure mode only)
 install_openbao_agents() {
-    log_section "Step 2/4: openbao-agents"
+    log_section "$STEP_OPENBAO: openbao-agents"
 
     if command -v start-openbao-mcp &>/dev/null; then
         log_info "openbao-agents already installed"
@@ -326,9 +332,9 @@ install_openbao_agents() {
     fi
 }
 
-# Step 4: mcp-proxy
+# mcp-proxy
 install_mcp_proxy() {
-    log_section "Step 4/4: mcp-proxy"
+    log_section "$STEP_MCP_PROXY: mcp-proxy"
 
     cd "$PROJECT_DIR"
 
@@ -452,9 +458,17 @@ main() {
     echo -e "${BLUE}╚════════════════════════════════════════════════════════╝${NC}"
     echo ""
 
+    # Set step labels based on mode
     if [ "$SECURE_MODE" = true ]; then
         echo -e "${YELLOW}Secure mode:${NC} Including secrets infrastructure"
         echo ""
+        STEP_BITWARDEN="Step 1/4"
+        STEP_OPENBAO="Step 2/4"
+        STEP_MCP_SERVERS="Step 3/4"
+        STEP_MCP_PROXY="Step 4/4"
+    else
+        STEP_MCP_SERVERS="Step 1/2"
+        STEP_MCP_PROXY="Step 2/2"
     fi
 
     check_dependencies
