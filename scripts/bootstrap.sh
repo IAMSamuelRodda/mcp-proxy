@@ -237,6 +237,35 @@ install_mcp_proxy() {
     INSTALLED+=("mcp-proxy")
 }
 
+# Refresh only: skip deps, just update config and regenerate hierarchy
+refresh_only() {
+    log_section "Refreshing mcp-proxy (config + hierarchy)"
+
+    cd "$PROJECT_DIR"
+
+    if [ ! -f "config/config.local.json" ]; then
+        log_error "config/config.local.json not found!"
+        exit 1
+    fi
+
+    if [ ! -f "$MCP_PROXY_DIR/structure_generator" ]; then
+        log_error "structure_generator not found. Run full bootstrap first."
+        exit 1
+    fi
+
+    log_info "Copying configuration..."
+    cp config/config.local.json "$MCP_PROXY_DIR/config.json"
+
+    log_info "Generating tool hierarchy..."
+    "$MCP_PROXY_DIR/structure_generator" \
+        --config "$MCP_PROXY_DIR/config.json" \
+        --output "$MCP_PROXY_DIR/hierarchy"
+
+    log_info "Refresh complete!"
+    echo ""
+    echo "Restart Claude Code to pick up changes."
+}
+
 # Summary
 print_summary() {
     log_section "Installation Summary"
@@ -305,6 +334,10 @@ case "${1:-}" in
         echo "Bootstrap full MCP proxy infrastructure on a new workstation."
         echo "Dependencies are cloned from GitHub automatically if not present."
         echo ""
+        echo "Options:"
+        echo "  --refresh    Skip deps, just update config and regenerate hierarchy"
+        echo "  -h, --help   Show this help"
+        echo ""
         echo "GitHub repos:"
         echo "  bitwarden-guard: $BITWARDEN_GUARD_URL"
         echo "  openbao-agents:  $OPENBAO_AGENTS_URL"
@@ -315,7 +348,14 @@ case "${1:-}" in
         echo "  OPENBAO_AGENTS_REPO    Override openbao-agents repo path"
         echo "  MCP_SERVERS_DIR        MCP servers directory (default: ~/.claude/mcp-servers)"
         echo "  MCP_PROXY_DIR          mcp-proxy install directory (default: ~/.claude/mcp-proxy)"
+        echo ""
+        echo "Examples:"
+        echo "  $0              # Full bootstrap (first time setup)"
+        echo "  $0 --refresh    # Just added a new server to config.local.json"
         exit 0
+        ;;
+    --refresh)
+        refresh_only
         ;;
     *)
         main
