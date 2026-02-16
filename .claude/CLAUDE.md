@@ -22,7 +22,7 @@ For a new machine, run the bootstrap script to install all dependencies:
 
 This orchestrates installation of:
 1. **bitwarden-guard** ([GitHub](https://github.com/IAMSamuelRodda/bitwarden-guard)) - Session management
-2. **openbao-agents** ([GitHub](https://github.com/IAMSamuelRodda/openbao-agents)) - Secrets access
+2. **obao** ([GitHub](https://github.com/IAMSamuelRodda/obao)) - Secrets access
 3. **MCP servers** (`~/.claude/mcp-servers/*/`) - Each needs `.venv` with deps
 4. **mcp-proxy** (this repo) - Aggregates all MCP servers
 

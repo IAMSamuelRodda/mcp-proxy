@@ -3,13 +3,13 @@
 #
 # Installs:
 # 1. bitwarden-guard (session management)
-# 2. openbao-agents (secrets access)
+# 2. obao (secrets access)
 # 3. MCP servers (from source definitions in config)
 # 4. mcp-proxy (this project)
 #
 # Flags:
 #   (none)      Simple mode - MCP servers + proxy (default)
-#   --secure    Full bootstrap with secrets infrastructure (bitwarden-guard, openbao-agents)
+#   --secure    Full bootstrap with secrets infrastructure (bitwarden-guard, obao)
 #   --refresh   Config + hierarchy only (skip source updates)
 #   --force     Clean reinstall of all MCP servers
 
@@ -33,12 +33,12 @@ PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 
 # GitHub URLs for core dependencies
 BITWARDEN_GUARD_URL="https://github.com/IAMSamuelRodda/bitwarden-guard.git"
-OPENBAO_AGENTS_URL="https://github.com/IAMSamuelRodda/openbao-agents.git"
+OPENBAO_AGENTS_URL="https://github.com/IAMSamuelRodda/obao.git"
 
 # Default paths
 DEPS_DIR="${DEPS_DIR:-$HOME/.claude/deps}"
 BITWARDEN_GUARD_REPO="${BITWARDEN_GUARD_REPO:-$DEPS_DIR/bitwarden-guard}"
-OPENBAO_AGENTS_REPO="${OPENBAO_AGENTS_REPO:-$DEPS_DIR/openbao-agents}"
+OPENBAO_AGENTS_REPO="${OPENBAO_AGENTS_REPO:-$DEPS_DIR/obao}"
 MCP_SERVERS_DIR="${MCP_SERVERS_DIR:-$HOME/.claude/mcp-servers}"
 MCP_PROXY_DIR="${MCP_PROXY_DIR:-$HOME/.claude/mcp-proxy}"
 CONFIG_FILE="$PROJECT_DIR/config/config.local.json"
@@ -300,34 +300,34 @@ install_bitwarden_guard() {
     fi
 }
 
-# openbao-agents (secure mode only)
+# obao (secure mode only)
 install_openbao_agents() {
-    log_section "$STEP_OPENBAO: openbao-agents"
+    log_section "$STEP_OPENBAO: obao"
 
     if command -v start-openbao-mcp &>/dev/null; then
-        log_info "openbao-agents already installed"
-        SKIPPED+=("openbao-agents")
+        log_info "obao already installed"
+        SKIPPED+=("obao")
         return 0
     fi
 
     if [ ! -d "$OPENBAO_AGENTS_REPO" ]; then
-        log_info "Cloning openbao-agents from GitHub..."
+        log_info "Cloning obao from GitHub..."
         mkdir -p "$DEPS_DIR"
         if ! git clone "$OPENBAO_AGENTS_URL" "$OPENBAO_AGENTS_REPO"; then
-            log_error "Failed to clone openbao-agents"
-            FAILED+=("openbao-agents")
+            log_error "Failed to clone obao"
+            FAILED+=("obao")
             return 1
         fi
     fi
 
-    log_info "Installing openbao-agents..."
+    log_info "Installing obao..."
     cd "$OPENBAO_AGENTS_REPO"
     if ./install.sh; then
-        log_info "openbao-agents installed"
-        INSTALLED+=("openbao-agents")
+        log_info "obao installed"
+        INSTALLED+=("obao")
     else
-        log_error "openbao-agents installation failed"
-        FAILED+=("openbao-agents")
+        log_error "obao installation failed"
+        FAILED+=("obao")
         return 1
     fi
 }
@@ -594,7 +594,7 @@ show_help() {
     echo ""
     echo "Options:"
     echo "  (none)       Simple mode - MCP servers + proxy (default)"
-    echo "  --secure     Include secrets infrastructure (bitwarden-guard, openbao-agents)"
+    echo "  --secure     Include secrets infrastructure (bitwarden-guard, obao)"
     echo "  --refresh    Config + hierarchy only (skip source updates)"
     echo "  --force      Force clean reinstall of all MCP servers"
     echo "  -h, --help   Show this help"

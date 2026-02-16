@@ -12,7 +12,7 @@ Production-grade secrets management for MCP servers using OpenBao (HashiCorp Vau
 
 ```
 ┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
-│ Bitwarden Vault │────>│ bitwarden-guard  │────>│ openbao-agents  │
+│ Bitwarden Vault │────>│ bitwarden-guard  │────>│ obao  │
 │ (master creds)  │     │ (session mgmt)   │     │ (local agents)  │
 └─────────────────┘     └──────────────────┘     └────────┬────────┘
                                                           │
@@ -63,13 +63,13 @@ cd ~/.claude/deps/bitwarden-guard && ./install.sh
 
 **Verify:** `bitwarden-guard unlock` prompts for master password.
 
-### Step 2: openbao-agents
+### Step 2: obao
 
 Local agents that authenticate to OpenBao via AppRole.
 
 ```bash
-git clone https://github.com/IAMSamuelRodda/openbao-agents.git ~/.claude/deps/openbao-agents
-cd ~/.claude/deps/openbao-agents && ./install.sh
+git clone https://github.com/IAMSamuelRodda/obao.git ~/.claude/deps/obao
+cd ~/.claude/deps/obao && ./install.sh
 ```
 
 **Creates:** `start-openbao-mcp`, `start-openbao-admin`, `start-openbao-workstation`
@@ -124,7 +124,7 @@ Create `config/config.local.json` with secrets provider:
 ```json
 {
   "mcpProxy": {
-    "hierarchyPath": "/home/YOUR_USER/.claude/mcp-proxy/hierarchy",
+    "hierarchyPath": "${MCP_PROXY_DIR}/hierarchy",
     "options": {
       "secretsProvider": "openbao",
       "secretsAutoStart": true,

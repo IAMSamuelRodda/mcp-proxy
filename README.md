@@ -26,6 +26,16 @@ This progressive disclosure pattern reduces context to ~800 tokens while maintai
 | **Source-based installation** | MCP servers installed from git/local sources |
 | **Portable config** | Variable expansion for machine-independent configs |
 
+## Prerequisites
+
+| Dependency | Purpose | Install |
+|-----------|---------|---------|
+| **Go 1.21+** | Build mcp-proxy binary | [go.dev/dl](https://go.dev/dl/) or `./scripts/install-go.sh` |
+| **Python 3.10+** | MCP server runtimes | Usually pre-installed |
+| **jq** | JSON config parsing | `sudo apt install jq` / `brew install jq` |
+| **envsubst** | Variable expansion in configs | `sudo apt install gettext-base` / `brew install gettext` |
+| **uv** *(optional)* | Faster Python package installs | [docs.astral.sh/uv](https://docs.astral.sh/uv/) |
+
 ## Quick Start
 
 ```bash
@@ -86,7 +96,7 @@ The bootstrap script orchestrates full workstation setup:
 | Flag | Behavior |
 |------|----------|
 | (none) | Default: MCP servers → mcp-proxy |
-| `--secure` | Include secrets infrastructure (bitwarden-guard, openbao-agents) |
+| `--secure` | Include secrets infrastructure (bitwarden-guard, obao) |
 | `--refresh` | Config + hierarchy only (fast, skips source updates) |
 | `--force` | Clean reinstall all MCP servers from source |
 
@@ -96,7 +106,7 @@ The bootstrap script orchestrates full workstation setup:
 3. **Builds mcp-proxy** - Compiles Go binary + structure generator
 4. **Deploys** - Copies to `~/.claude/mcp-proxy/`, expands variables
 5. **Updates ~/.claude.json** - Adds mcp-proxy entry automatically
-6. *(--secure only)* Installs bitwarden-guard + openbao-agents
+6. *(--secure only)* Installs bitwarden-guard + obao
 
 ## Configuration
 
@@ -200,6 +210,16 @@ Add to `~/.claude.json`:
 >
 > The install script will detect this and prompt you to clean up automatically.
 
+## Finding MCP Servers
+
+mcp-proxy aggregates any MCP server that uses stdio, SSE, or Streamable HTTP transport. To find servers to add:
+
+- **[mcp.so](https://mcp.so)** — Community registry of MCP servers
+- **[modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers)** — Official reference implementations
+- **[awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers)** — Curated list
+
+Add any server to your config with a `source` field and bootstrap will install it automatically.
+
 ## Architecture
 
 ```
@@ -240,8 +260,8 @@ mcp-proxy/
 │   ├── config.template.json   # Portable template with variables
 │   └── config.local.json      # Your local config (gitignored)
 ├── scripts/
-│   ├── bootstrap.sh       # Full setup (MCP servers + proxy) - recommended
-│   ├── install.sh         # Binary-only (if servers already installed)
+│   ├── bootstrap.sh       # Full setup: install MCP servers + build proxy (start here)
+│   ├── install.sh         # Binary-only: rebuild proxy without touching servers
 │   └── install-go.sh      # Install Go if missing
 └── docs/
     └── SECURE_SETUP.md    # OpenBao + Bitwarden guide
