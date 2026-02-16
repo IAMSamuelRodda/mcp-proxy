@@ -15,6 +15,7 @@ import (
 
 	"github.com/IAMSamuelRodda/mcp-proxy/internal/config"
 	"github.com/IAMSamuelRodda/mcp-proxy/internal/hierarchy"
+	"github.com/IAMSamuelRodda/mcp-proxy/internal/normalize"
 	"github.com/IAMSamuelRodda/mcp-proxy/internal/secrets"
 	"github.com/IAMSamuelRodda/mcp-proxy/internal/secrets/openbao"
 	"github.com/mark3labs/mcp-go/mcp"
@@ -239,9 +240,29 @@ func StartStdioServer(cfg *config.Config) error {
 		return h.HandleExecuteTool(ctx, registry, toolPath, arguments)
 	})
 
+	// Pipe stdout through normalizer to fix null arrays (mcp-go spec violation)
+	realStdout := os.Stdout
+	pr, pw, err := os.Pipe()
+	if err != nil {
+		return fmt.Errorf("failed to create stdout pipe: %w", err)
+	}
+	os.Stdout = pw
+
+	done := make(chan struct{})
+	go func() {
+		normalize.ProcessStdout(pr, realStdout)
+		close(done)
+	}()
+
 	// Serve via stdio
 	log.Printf("Starting hierarchical MCP proxy (stdio server)")
-	return server.ServeStdio(mcpServer)
+	serveErr := server.ServeStdio(mcpServer)
+
+	pw.Close()
+	<-done
+	os.Stdout = realStdout
+
+	return serveErr
 }
 
 // StartHTTPServer starts the HTTP server with the given configuration

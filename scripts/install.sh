@@ -1,11 +1,14 @@
 #!/bin/bash
-# install.sh - Lightweight mcp-proxy binary installation
+# install.sh - Rebuild and deploy mcp-proxy binary only
 #
-# Use this if you already have MCP servers installed and just need the proxy.
-# For full setup (MCP servers + proxy), use bootstrap.sh instead.
+# NOTE: Most users should run bootstrap.sh instead, which installs MCP
+# servers AND builds the proxy in one step.
+#
+# Use this script ONLY when you need to rebuild the proxy binary without
+# touching your MCP server installations (e.g., after pulling proxy updates).
 #
 # What this does:
-#   - Builds mcp-proxy binary
+#   - Builds mcp-proxy binary from source
 #   - Deploys to ~/.claude/mcp-proxy/
 #   - Updates ~/.claude.json
 #

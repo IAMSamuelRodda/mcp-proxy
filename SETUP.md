@@ -51,7 +51,7 @@ grep -E "npx|@modelcontextprotocol|@anthropic" ~/.claude.json
 
 ### Step 4: Generate Config
 
-Create `config/config.json` based on discovered servers:
+Create `config/config.local.json` based on discovered servers (copy from `config/config.template.json` as a starting point):
 
 ```json
 {
@@ -59,7 +59,7 @@ Create `config/config.json` based on discovered servers:
     "name": "MCP Proxy",
     "version": "1.0.0",
     "type": "stdio",
-    "hierarchyPath": "~/.claude/mcp-proxy/hierarchy",
+    "hierarchyPath": "${MCP_PROXY_DIR}/hierarchy",
     "options": {
       "lazyLoad": true,
       "preloadAll": true
@@ -67,9 +67,13 @@ Create `config/config.json` based on discovered servers:
   },
   "mcpServers": {
     "<server-name>": {
-      "transportType": "stdio|sse|streamable",
-      "command": "/path/to/python/or/node",
-      "args": ["/path/to/mcp_server.py"],
+      "source": {
+        "type": "git",
+        "url": "https://github.com/user/mcp-server.git"
+      },
+      "transportType": "stdio",
+      "command": "${MCP_SERVERS_DIR}/<server-name>/.venv/bin/python",
+      "args": ["${MCP_SERVERS_DIR}/<server-name>/server.py"],
       "env": {},
       "options": { "lazyLoad": true }
     }
